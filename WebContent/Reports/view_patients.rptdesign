@@ -5,6 +5,25 @@
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="provider_id" id="112">
+            <text-property name="promptText">Provide Your ID</text-property>
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <simple-property-list name="defaultValue">
+                <value type="constant">1</value>
+            </simple-property-list>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="concealValue">false</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Raxadata" id="7">
             <list-property name="privateDriverProperties">
@@ -24,24 +43,19 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
-            <property name="odaURL">jdbc:mysql://localhost/datafordss</property>
+            <property name="odaURL">jdbc:mysql://localhost/dataForDSS</property>
             <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">SGVsbG8xMjM=</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="viewpatients" id="8">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">birthdate</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">birthdate</text-property>
-                    <text-property name="heading">birthdate</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">gender</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">gender</text-property>
-                    <text-property name="heading">gender</text-property>
+                    <property name="columnName">age</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">age</text-property>
+                    <text-property name="heading">age</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">given_name</property>
@@ -55,27 +69,204 @@
                     <text-property name="displayName">last_name</text-property>
                     <text-property name="heading">last_name</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">person_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">person_id</text-property>
+                    <text-property name="heading">person_id</text-property>
+                </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">birthdate</property>
-                        <property name="dataType">date</property>
+                        <property name="name">age</property>
+                        <property name="dataType">decimal</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">gender</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
                         <property name="name">given_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
+                        <property name="position">3</property>
+                        <property name="name">family_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
                         <property name="position">4</property>
+                        <property name="name">person_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Raxadata</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">age</property>
+                    <property name="nativeName">age</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">given_name</property>
+                    <property name="nativeName">given_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">family_name</property>
+                    <property name="nativeName">family_name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">person_id</property>
+                    <property name="nativeName">person_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT  year(current_timestamp)-year(person.birthdate) as age, person_name.`given_name` AS first_name,person_name.`family_name` AS last_name,person.person_id
+FROM  person_name,person
+WHERE person_name.person_id in (select distinct patient_id from encounter where encounter.encounter_id in (select encounter_id from encounter_provider where provider_id =?) and MONTH(encounter.encounter_datetime) between MONTH(current_timestamp)-4 and MONTH(current_timestamp)) and person_name.person_id=person.person_id group by person_name.person_id]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="patientscount" id="41">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">count(DISTINCT patient_id)</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">count(DISTINCT patient_id)</text-property>
+                    <text-property name="heading">count(DISTINCT patient_id)</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">count(DISTINCT patient_id)</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Raxadata</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">count(DISTINCT patient_id)</property>
+                    <property name="nativeName">count(DISTINCT patient_id)</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[SELECT count(DISTINCT patient_id) FROM encounter WHERE (`encounter_id`) IN      (select encounter_id from encounter_provider where provider_id=?)]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="providerinfo" id="75">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">given_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">given_name</text-property>
+                    <text-property name="heading">given_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">family_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">family_name</text-property>
+                    <text-property name="heading">family_name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">given_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
                         <property name="name">family_name</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -85,37 +276,502 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">birthdate</property>
-                    <property name="nativeName">birthdate</property>
-                    <property name="dataType">date</property>
-                    <property name="nativeDataType">91</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">gender</property>
-                    <property name="nativeName">gender</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
                     <property name="name">given_name</property>
                     <property name="nativeName">given_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">2</property>
                     <property name="name">family_name</property>
                     <property name="nativeName">family_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT person.`birthdate`,person.`gender`,person_name.`given_name` AS first_name,person_name.`family_name` AS last_name
-FROM  person,person_name
-WHERE person_name.person_id= person.`person_id` and (person.`person_id`) IN (SELECT DISTINCT patient_id FROM encounter WHERE (`encounter_id`) IN      (select encounter_id from encounter_provider where provider_id=1) )
+            <xml-property name="queryText"><![CDATA[select person_name.given_name,person_name.family_name
+from person_name
+where person_id=?]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>given_name</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>50</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>given_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>given_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>50</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>family_name</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>50</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>family_name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>family_name</design:label>
+            <design:formattingHints>
+              <design:displaySize>50</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <joint-data-set name="patientswithobs" id="115">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">obs::person_id</property>
+                    <property name="alias">obs::person_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">obs::person_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">obs::concept_id</property>
+                    <property name="alias">concept_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">obs::concept_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">obs::name</property>
+                    <property name="alias">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">obs::name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">viewpatients::age</property>
+                    <property name="alias">age</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">viewpatients::age</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">viewpatients::person_id</property>
+                    <property name="alias">viewpatients::person_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">viewpatients::person_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">viewpatients::family_name</property>
+                    <property name="alias">family_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">viewpatients::family_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">viewpatients::given_name</property>
+                    <property name="alias">given_name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">viewpatients::given_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">obs::obs_id</property>
+                    <property name="alias">obs_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">obs::obs_id</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">viewpatients::age</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">viewpatients::given_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">viewpatients::family_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">viewpatients::person_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">obs::obs_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">obs::concept_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">obs::person_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">obs::name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <simple-property-list name="dataSets">
+                <value>viewpatients</value>
+                <value>obs</value>
+            </simple-property-list>
+            <list-property name="joinConditions">
+                <structure>
+                    <property name="joinType">left-out</property>
+                    <property name="joinOperator">eq</property>
+                    <property name="leftDataSet">viewpatients</property>
+                    <property name="rightDataSet">obs</property>
+                    <expression name="leftExpression">dataSetRow["person_id"]</expression>
+                    <expression name="rightExpression">dataSetRow["person_id"]</expression>
+                </structure>
+            </list-property>
+        </joint-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="obs" id="152">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">obs_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">obs_id</text-property>
+                    <text-property name="heading">obs_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">concept_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">concept_id</text-property>
+                    <text-property name="heading">concept_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">person_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">person_id</text-property>
+                    <text-property name="heading">person_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">obs_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">concept_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">person_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Raxadata</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">obs_id</property>
+                    <property name="nativeName">obs_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">concept_id</property>
+                    <property name="nativeName">concept_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">person_id</property>
+                    <property name="nativeName">person_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select obs_id,obs.concept_id,obs.person_id,concept_name.name from obs,concept_name where obs.encounter_id in (select encounter_id from encounter_provider where provider_id =? and MONTH(encounter_provider.date_created) between MONTH(current_timestamp)-4 and MONTH(current_timestamp)) and obs.concept_id=concept_name.concept_id group by obs.person_id]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>max(obs_id)</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>11</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>max(obs_id)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>max(obs_id)</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>concept_id</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>11</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>concept_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>concept_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>person_id</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>11</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>person_id</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>person_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>name</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>255</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>name</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>name</design:label>
+            <design:formattingHints>
+              <design:displaySize>255</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="patientsthismonth" id="245">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">count(distinct patient_id)</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">count(distinct patient_id)</text-property>
+                    <text-property name="heading">count(distinct patient_id)</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">count(distinct patient_id)</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Raxadata</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">count(distinct patient_id)</property>
+                    <property name="nativeName">count(distinct patient_id)</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select count(distinct patient_id) from encounter where encounter.encounter_id in (select encounter_id from encounter_provider where provider_id =?) and MONTH(encounter.encounter_datetime) between MONTH(current_timestamp)-3 and MONTH(current_timestamp)
 ]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>count(distinct patient_id)</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
+            <design:precision>21</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>count(distinct patient_id)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>count(distinct patient_id)</design:label>
+            <design:formattingHints>
+              <design:displaySize>21</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
         </oda-data-set>
     </data-sets>
     <styles>
@@ -154,6 +810,9 @@ WHERE person_name.person_id= person.`person_id` and (person.`person_id`) IN (SEL
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
+            <property name="topMargin">0.25in</property>
+            <property name="leftMargin">0.5in</property>
+            <property name="backgroundColor">#FFFFFF</property>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
@@ -163,94 +822,423 @@ WHERE person_name.person_id= person.`person_id` and (person.`person_id`) IN (SEL
         </simple-master-page>
     </page-setup>
     <body>
-        <table id="9">
-            <property name="dataSet">viewpatients</property>
+        <image id="37">
+            <property name="marginLeft">0pt</property>
+            <property name="height">0.7708333333333334in</property>
+            <property name="width">0.8333333333333334in</property>
+            <property name="source">embed</property>
+            <property name="imageName">logo1.png</property>
+        </image>
+        <text id="40">
+            <property name="fontFamily">"Comic Sans MS"</property>
+            <property name="contentType">html</property>
+            <text-property name="content"><![CDATA[<centre><br><H3 align="center" >
+
+
+Patients Records
+</H3>
+</centre>]]></text-property>
+        </text>
+        <grid id="85">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="width">7.697916666666667in</property>
+            <column id="86">
+                <property name="width">2.4270833333333335in</property>
+            </column>
+            <column id="87">
+                <property name="width">2.7083333333333335in</property>
+            </column>
+            <column id="88">
+                <property name="width">2.5625in</property>
+            </column>
+            <row id="89">
+                <cell id="90">
+                    <text id="101">
+                        <property name="fontFamily">"Times New Roman"</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="marginLeft">20pt</property>
+                        <property name="contentType">html</property>
+                        <text-property name="content"><![CDATA[Provider Name :]]></text-property>
+                    </text>
+                </cell>
+                <cell id="91">
+                    <data id="102">
+                        <property name="fontFamily">"Times New Roman"</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="dataSet">providerinfo</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">given_name</property>
+                                <text-property name="displayName">given_name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["given_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">given_name</property>
+                    </data>
+                </cell>
+                <cell id="92">
+                    <data id="108">
+                        <property name="fontFamily">"Times New Roman"</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="dataSet">providerinfo</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">family_name</property>
+                                <text-property name="displayName">family_name</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["family_name"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">family_name</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="93">
+                <cell id="94">
+                    <text id="104">
+                        <property name="fontFamily">"Times New Roman"</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="marginLeft">20pt</property>
+                        <property name="contentType">auto</property>
+                        <text-property name="content"><![CDATA[Total Patients visited:]]></text-property>
+                    </text>
+                </cell>
+                <cell id="95">
+                    <data id="105">
+                        <property name="fontFamily">"Times New Roman"</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="dataSet">patientscount</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">count(DISTINCT patient_id)</property>
+                                <text-property name="displayName">count(DISTINCT patient_id)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["count(DISTINCT patient_id)"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">count(DISTINCT patient_id)</property>
+                    </data>
+                </cell>
+                <cell id="96"/>
+            </row>
+            <row id="97">
+                <cell id="98">
+                    <text id="106">
+                        <property name="fontFamily">"Times New Roman"</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="marginLeft">20pt</property>
+                        <property name="contentType">auto</property>
+                        <text-property name="content"><![CDATA[Total Patients visited in Last 3 months :]]></text-property>
+                    </text>
+                </cell>
+                <cell id="99">
+                    <data id="246">
+                        <property name="fontFamily">"Times New Roman"</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="dataSet">patientsthismonth</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">count(distinct patient_id)</property>
+                                <text-property name="displayName">count(distinct patient_id)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["count(distinct patient_id)"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">count(distinct patient_id)</property>
+                    </data>
+                </cell>
+                <cell id="100"/>
+            </row>
+        </grid>
+        <text id="74">
+            <property name="fontFamily">"Times New Roman"</property>
+            <property name="fontSize">14pt</property>
+            <property name="marginLeft">30pt</property>
+            <property name="contentType">html</property>
+            <text-property name="content"><![CDATA[<br>Patiens details of desired months:]]></text-property>
+        </text>
+        <label id="111"/>
+        <label id="118"/>
+        <table id="181">
+            <property name="width">7.697916666666667in</property>
+            <property name="dataSet">patientswithobs</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">given_name</property>
-                    <text-property name="displayName">first_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["given_name"]</expression>
+                    <property name="name">viewpatients::age</property>
+                    <text-property name="displayName">viewpatients::age</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["viewpatients::age"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">viewpatients::given_name</property>
+                    <text-property name="displayName">viewpatients::given_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["viewpatients::given_name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">family_name</property>
-                    <text-property name="displayName">last_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["family_name"]</expression>
+                    <property name="name">viewpatients::family_name</property>
+                    <text-property name="displayName">viewpatients::family_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["viewpatients::family_name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">gender</property>
-                    <text-property name="displayName">gender</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["gender"]</expression>
+                    <property name="name">obs::name</property>
+                    <text-property name="displayName">obs::name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["obs::name"]</expression>
                     <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">birthdate</property>
-                    <text-property name="displayName">birthdate</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["birthdate"]</expression>
-                    <property name="dataType">date</property>
                 </structure>
             </list-property>
-            <column id="25"/>
-            <column id="26"/>
-            <column id="27"/>
-            <column id="28"/>
+            <column id="197">
+                <property name="width">2.3020833333333335in</property>
+            </column>
+            <column id="198">
+                <property name="width">1.5833333333333333in</property>
+            </column>
+            <column id="199">
+                <property name="width">2.4479166666666665in</property>
+            </column>
+            <column id="200">
+                <property name="width">1.3645833333333333in</property>
+            </column>
             <header>
-                <row id="10">
-                    <cell id="11">
-                        <label id="29">
-                            <text-property name="text">first_name</text-property>
+                <row id="182">
+                    <property name="backgroundColor">#FF8000</property>
+                    <cell id="183">
+                        <label id="204">
+                            <property name="marginLeft">30pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">First Name</text-property>
                         </label>
                     </cell>
-                    <cell id="12">
-                        <label id="31">
-                            <text-property name="text">last_name</text-property>
+                    <cell id="184">
+                        <label id="206">
+                            <property name="marginLeft">30pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Last Name </text-property>
                         </label>
                     </cell>
-                    <cell id="13">
-                        <label id="33">
-                            <text-property name="text">gender</text-property>
+                    <cell id="185">
+                        <label id="201">
+                            <property name="marginLeft">40pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Age</text-property>
                         </label>
                     </cell>
-                    <cell id="14">
-                        <label id="35">
-                            <text-property name="text">birthdate</text-property>
-                        </label>
-                    </cell>
+                    <cell id="186"/>
                 </row>
             </header>
+            <group id="233">
+                <property name="groupName">NewTableGroup1</property>
+                <expression name="keyExpr" type="javascript">row["obs::name"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["obs::name"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="234">
+                        <cell id="235">
+                            <data id="244">
+                                <property name="backgroundColor">#DBDBDB</property>
+                                <property name="fontFamily">"Times New Roman"</property>
+                                <property name="fontWeight">bold</property>
+                                <property name="textUnderline">none</property>
+                                <property name="marginTop">10pt</property>
+                                <property name="marginLeft">30pt</property>
+                                <property name="resultSetColumn">obs::name</property>
+                            </data>
+                        </cell>
+                        <cell id="236"/>
+                        <cell id="237"/>
+                        <cell id="238"/>
+                    </row>
+                </header>
+                <footer>
+                    <row id="239">
+                        <cell id="240"/>
+                        <cell id="241"/>
+                        <cell id="242"/>
+                        <cell id="243"/>
+                    </row>
+                </footer>
+            </group>
             <detail>
-                <row id="15">
-                    <cell id="16">
-                        <data id="30">
-                            <property name="resultSetColumn">given_name</property>
+                <row id="187">
+                    <property name="fontSize">14pt</property>
+                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">none</property>
+                    <cell id="188">
+                        <data id="205">
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="marginLeft">40pt</property>
+                            <property name="resultSetColumn">viewpatients::given_name</property>
                         </data>
                     </cell>
-                    <cell id="17">
-                        <data id="32">
-                            <property name="resultSetColumn">family_name</property>
+                    <cell id="189">
+                        <data id="207">
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="marginLeft">40pt</property>
+                            <property name="resultSetColumn">viewpatients::family_name</property>
                         </data>
                     </cell>
-                    <cell id="18">
-                        <data id="34">
-                            <property name="resultSetColumn">gender</property>
+                    <cell id="190">
+                        <data id="202">
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="marginLeft">40pt</property>
+                            <property name="resultSetColumn">viewpatients::age</property>
                         </data>
                     </cell>
-                    <cell id="19">
-                        <data id="36">
-                            <property name="resultSetColumn">birthdate</property>
-                        </data>
-                    </cell>
+                    <cell id="191"/>
                 </row>
             </detail>
             <footer>
-                <row id="20">
-                    <cell id="21"/>
-                    <cell id="22"/>
-                    <cell id="23"/>
-                    <cell id="24"/>
+                <row id="192">
+                    <cell id="193"/>
+                    <cell id="194"/>
+                    <cell id="195"/>
+                    <cell id="196"/>
                 </row>
             </footer>
         </table>
     </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">logo1.png</property>
+            <property name="type">image/png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAAFAAAABKCAYAAAAsXNNQAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+                YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAABzpSURBVHhe7Vxpb1zXeX5n32c4XEVSlGRRqyVrsWtHUmTX
+                sdPASGwHTowARQukTZw2/dAv7R/oD+gPaIEGDdC4rdEidmG7rRM7cRbJtixZsvaFpEiKi7gvs6/s87zn
+                3pkhRYmSyZkqaK9wNLx37px7znve5XmXcx1/9HcfLS2Vy8LD4XCILOmfeiw5lnDNqdfMZZzjnxOXeJR5
+                cQnXnLyqX+t9PNf+eAk3ab88Q396G36j31sd8R77B05e09MlvU/74hi0r7L2qd2Zx+GaiNNlrrFbTsWJ
+                Ez6Tt5XxjzfqeU0/9vP1d3i+DgknTqf+YeaCzvUnFg3KnIvOnx1aQ/7+61cxTmtCKwhokcPcWRmyo0Jj
+                04f1wNq7rM7tryun9sRrFslQ2fpxlcY1vZn56JOq414+oprn6T325PBDkIacoPc7sIAkgaGWIZi5w+7A
+                cEDtAunwbMZQ8mmPlcPxgzf6a8+XDdz+cfVuM9ma+VZIaN9TS4/lVFjlrNLR8gmsfN49+3ngB9ZSW5el
+                SjHl+sp6WWytsmDoba12LcEd33/92r0JuIKb1iTKA9xQ7bqGgDql6vnKx9eeP8Cj6nYr1IWlL2o/ldrk
+                fHwHFaKtokdWuX+1Pu7jGmWljEZda5o5p5iooqAs1TTVpQ9Zs8zB8gVS5ayyX/lL/97IZhQLCFXT9Hl8
+                jvWvbmyzgR2vSkCj2Iw+KOO/EhoNJVsJ3Ljhjf1a/VfWzJrkwyayK2m/OgcqwUBAUKxYIaDhQCdEzQkO
+                YbNF7Y5PhT/Wvdbftefsw5xTVVhWEpaSkKQMHFLAcwslkSKoWkAjNLENZ9WEbSAbraMrx2v/fH2ZEeFA
+                82AxFyYY8zkk5ncZnIfmQSNhzcRrjFftAJQeIAY/idtw8+pW276nJE6Lw7Nlh2QLS5IpgogW8RQXGoFQ
+                CVDCE4tRV1p4cx3zX/dP7yBgEcRLZUvSFHTKsd6gPLG5SfweN8S2JLOJjJweSYvL5ZaA1yl+F3XYnfqz
+                AEJk8mVZyOQl4BHxodlgmuqAnFUsOSRfdIjbWZaA24V7HBIOOCQe9EgYfbtdTiXSXLokZ/DMgemsjMzn
+                MRaXRLwu8bhIRBLVAvF3XdF10+ieHbge//Zf/s0yBsIEufoBTKgz5saEfFh9cB5R+FIJ3LEkOYhXHvdk
+                CxQ3kRyv6XVcA/fk0Mh3UXBvLOCSsM8lQRAliMmT8AF8BkGEgMcpIf3OJV43+IpOCBbEiT9cIB6JyOey
+                T557QTSf24HFxAIoO9oLw1VUClZAcH3JVu19VREuWa4dxquDJZdRlPd0+mR7q08GZ7MyPJuXW3NFuDVG
+                nFTM0PjboHtJHmnxyfEdTZLOl6QA4vIw4g9VgI5BG1CKek4klSlJIluU8URBBufyki5SF+K5aM1ht+xu
+                D0g7PoM+p4wt5OXq7ZzMgjPzlgvIvowbSjersWbnDgLqRNU3NC5OCZrddvX4XUvAKc/tDoMbnHKyPyND
+                ECuOnYShR83fdoQc0h3zSGskIB/2LUJUl5Ro9ExJSnIYGYbGJOACB/oEXIrfRD3SHvXJdLIgoyDU9ak8
+                uFkqBA+4RXa0+UDQoHoFVyfScn48o4vgAuHYSEjFrxZP1psT7xBh80DzeBLFBSUOqVGOob5J55dkJlVS
+                KLMLk+mfzSkE8UAEqdx5RP0ONCeuueTGVE7FjTQrURVwUXCuYgg9SLFPwXDMZ8oyvlhC30VpDnmkty0g
+                ezr8cm0yh2dyEQWqxSEzYM8+9JmEHjnYFZAoVMDQfEHmsmXoUYo+h944At4VB6pUVqSBAzKix8ENzhYw
+                2YI0w9AY0Vy+zgq/lfgwICAsJ6afduO5XsM9iKRwYTIFkclkCcYiB9VQAEFLqjd74l5wKcUT4o/+krmy
+                DGHReB/v2QxO74i4JQSdrdBLx7JiQHVkw1UJuLq3ZFwsToIcRaxmK331upYN0ugjGh9Fiyv+1uiIpffV
+                WKBTPwgahXogJ1+ZzMh7Vxch/inZ3xmUniav+BRCCYyQW9ojXjVev7yRkAR07LGtAfkymhcqgVZekUEV
+                ONaRfKrG7+OwKMp4mmoyYjwlDs/Naq++5qQsQfNyF9ZcoB40TU/xj4R009JaHHdzJicnBxbl6PaofOvx
+                VolDCdrxPy8ITmPzs+sJWHCHHOr2y952n/GWoF+q6PM+5reOW+6PgPYDbLmuiLfhtPUeaoQsS8pFcqMR
+                tPPaLHRj/0wGerAoB0GkJUQ2qH9pbcmtNDL/fSUhp25l5dGuoKoNY/QbQ8IHI6BSagXB1k+/lcJvuJmi
+                bS1Y31RWxuZzquuIBU18zqgQNwg5DDg1BL3pASdGoDd50AVthBh/AQLWzNfmxI0kYoUdKdoGWQ/O5GUA
+                jZLdDjF2YxHpK9tqzg3CZWDJbwFD7mz2QAWIpGFsCKnqfayPgHUeHWlJyx8ARQh1rk7kZDegDXVkEhaY
+                wQ6KLKFMAVbl2nhadnQExA/RTgHm0CrX+3ioCcjJO0GhCDwQGgYalc4YYA04rgj0bKJDcPG8OAexp1I4
+                B3GbYM2jAOaWg1RXGj70BKR2UC+HIB5c5kBGzA+CMfhQQSsMKOAeSLUk4RKG4XbGw166AnVXgw89AWvZ
+                h64i8SdiEQpdag89w39ZmGAfPCAGLv6fAy0KKe42zogGJghf/LC2hmg2IfEJCufh0SC4A2BupSXqKsD3
+                C6TrPIh7d09fBqLLzBaEtoxYo3ovFuFMSQAPYzAIaxhMKlGeG3D8bogwaaP0M74z3TjEF0wUyEiuiYDj
+                jyAMCCFNAkFh2wuqJx1/BwhogU3LUEC9AQMiaEsguOJgKJBB2gy+SwDGNADF3KcvXM8lXKNvTTTRLaPX
+                AeJ54N/lCkWkDIomZsnQGAMIEOEgIIwX4JtRmtkMv7/Db9rwmTz0HMjioBxklrqtM+ZSziKoLqpVIUwp
+                K3Sh4dizyScjcxlJQb4ZmNhIB+lulH/4CGj7sJb80ZuYR9iFA93VGpBhuHR5BFZDPjh0IBoFeREEJLTZ
+                hWhMn35fRoTbRHnqfTy8BGTIwEp3ArXAs3AiweWSyVQB8UhCFeA8hq7wd0vIrYEGhvRnIb50gUnQ/5ME
+                NAxIKMKAARXgEkL7AU0sMds3lSwqTCGxGNj1wNV7bkcE6dcgAg456EZTj1ipo6kzC/6vcqBd2GjX3DB6
+                otFuEI6NQdaeuAfZvYh0I7R/ciAFd86E7QsgJvXekS1+6W7yIDK9JJ/dyij3MZ6oGboGaMH6EVCj0CCB
+                BlxN/K7qvBq2YJUBKyDstGgeRJlFcmQilYduK8tTIM6zu2JybiQh71yalQnkTJjhu430Jy3v7/eGkGb1
+                yq/60/Kfl5MgrrHSdoVqnZlPu68PAS3lzUkyAV/bNPkOLmJSntULSYSUU9mCZAFL3AgUbIn7ZGebX7a3
+                eJG0QhgLcb0+pDf7pvOSxP2sWtjajPx0i1/iCBpMI4vHJNQ0iKuguhItbwT5NoCAtTFV42yZZLxiM8yG
+                YXkGQk3yiNUFThU9huyZ/6AhcC4VxY8Sjx5k2J4Dx730WFye6AnJOHLD75yfUbHsjPm0WmIPLO2L++Ly
+                1Naw3JguyPvXkvrUjohL+7MSLPUHgNb6rJpYv9fa0ZmnmDEn/OK+mPzk0xkt9aAHQOvI2pomJMp7UcHw
+                pW1hhNuz8EsZ+DT1XAS8NAAaKEWGjelNzpbQY2IxL+dHEzKWoCVlXM+l1nVLkxu1OqjH8XhRH5OTTwaT
+                qJkpakkIV8hWA3YReWN4z1JDK6uz1nr4vQhIQrG0Y1vcpZHjJ7ZGNPCZQNI7AXgxhJKQK0iUZ4uYNDiR
+                MT1yTwm4jvUv/HdkM4xCc1g5eHIxhUVx6G8TEOW5HHxcfCbh55IrGdJi/YzmR/ivEbhlBYE2VAdSfNlh
+                F6LGTEHeRvJ9GjUsCyQg9BcTPXYcj5UFN6czcmksg1B9RvpRfTWB+9lDC7itB5Z1W7NXocsIKg/6AZB5
+                zwxgDBP0Eeg/qgGjQhqAmO/CWesmoGVftXslIERzV0cIIueVn11ekHcvLMrJm0m5AYzmg/fw7M6Y/MGe
+                iBzdFpDtSAARHMfQWlE8xCqu3wym5I0zE/Lh9TnJgjOn0+BENFpYBkl5D4MGpl5neb32WtJTj+/XTcBl
+                g7LCwlTmNCjT6bKMQp/dnCvJpdt5+fBGSt66MC+nhlIKeJ/Z2STP7AiBiNSPhpOoR0dRI/PxUEbevZqA
+                f+sHXAnIY5s8SBaZuhqCbILthrgaa1B9YwmoRLBRnymApOV1sRjSKs1IgnDjIOq5sax8cH1RjcQrB5tg
+                fSOmDhs9eGBYyMkzuO9Ev7nnK/j+SeBCAuyi7lhqTN53La7dcALaD1TdxICnEtHAFhZR0vViNdcijMEg
+                agzpmrEwaDOKOan3zLYzuxxOFOONLiB8BezYifI3EpNcmAGObEDady36bTyQ1sB6JR1bU1xEnjElB0rQ
+                CMrfQjAEJ26moe8WZQoQ5qltQRRyouQNckywTaIHUV78C4j+f1xcVFDNQqLWECCT5e7ZFVmNCJ6uRs26
+                ceCqD6ObpTUvgDH4ZAUB8d6F8YJ8cCMtn4+k5OneJumJejXMQq+F+pS6bxY1iT+/nlTO++aBiDYvKmHp
+                E5dZBGoVfOj6MYqjuhJ/ax1iGS4g/Gtg2AJgVQEJE9Os4lFGba3f4FdWX9Y2jzXYvKEEXElUGg0fRJqF
+                4yy+HEDdIetgntvdLC8eaJFSsahuILEeATfzIJ+iiGgaxOyIeOToI2ElMv1jNUOgWCWcqMyuezVlHvdP
+                LlAV5GCg8qizycsoykAmAI9IVFM9Zj6NMTMGjdd4pbZCd+UcGkpAuyjIcAlzGywgN24fGwF331QGXgYK
+                hTCyTnAiB8/7CJJZWDQDy359Mi+TiaJ0Rd0aJ+Q9jOJU+zchfj6D3NcSckkPINNW+NdbENVh2wZ/ugeN
+                BGIFLFsWtYY5fGbwSd+cfy8nnl3AWSXjXUp87647KRbcx8Eg5q52v5wHENYSX0IX+rX46aHuoEZELuA7
+                ZtDswm+KE+/hNgcT6gN3IYDA3zLXS26kqF0aT0BkC3Jgc0Sza6xzYZrSroEemS/KHMreOsMGFxKs07qz
+                H+OM2MSjHhX52t4orHxUnoT//HhPGH42W0i2gaB90yndbsEoju4CoHrB9g0nuJcLoBJseThm66zR47bT
+                s25f+J8sXziIkbJqAGpNvvtUi0729dMzCoDV28JBgmmcD59x+LmPdQfkcHdU3MgWcbBmT80S/OcMQvc5
+                uQ0R27UpKFdup7Q6n2JOF9D0syQRPPNrjzbJVVS0DqPsl5xDcSe3Uqz5nJf2x+T4zjgWHKUeLP/ANXLa
+                2EJWTg3MygIM02NdERgmLzY6mlBYwGvGOQBp+MX1BZmibw6i0YviPzKE7TbWX4S5C1PVk1H4MLzyzf1N
+                8trRDnlhb4u0IYoyOg+XDlw3MptSKPN0b1xeOtAuz+6OoxY6hQrVkLx8sFlYlUoIQ2xJdy6F/k4PJYAP
+                g/L1fU3gQFRpgbMZ9qLoMghxeEtUicff0PrTX++fSsjQdBLXPfLCo634fRiekEvGsHCDeJ4H3Mey4qPb
+                4/LtQ+2yNc6SOlNYz12ltZ5j/QmovGf23lG66N8e6A7Jvi54IJjANXDPhbGkXBxLQR2kMLmMZtR64n7Z
+                De6zfq66jgXl1EnkItuaj8EoEGu2Qs+xURcyZ+zXLRF+EMYQzxbrDFKiUwlW/pekqykgHVE/CuaLGAO2
+                THAMo0n5bDip4+CGoD1wS/diHIx6kxNWwqX6E9AChtxEiF1c8vyemHTFA6iyculmmX87O6Oh+GHotc/H
+                8vLmhVkNWZFQTQhIPLk1Cm8kJb9GQfkBbGug6JcgnkXuhgJduL/448GE3JhM43sfdBnVg8hebAo6tiOu
+                AVgza4MvB6fTqmpYvbWlJajc+sbZKfnxJ5PwjjJycTwL1TMr/352TrdcRLESzwMVPAs1gOib1mibKLs5
+                6k9AThL5W+oWTr6nKQRCekxkEAPhXhFuGtTQFEYzi3B9OleAyJegi1yyvS2MEH5RY4D9mPzzO0PSBiCt
+                iXUsihN9cAFOo3mwKDQOf3a8W/706GZ5pBXGjDoRjT42LfzbWKC2SBCgvRlRH5bAUayh4/A8DfJiENxK
+                QeItIO5JTu+IBbDoQd26xqWo1uM0goAWsNLSNBoQO2NmoS2yEUXMbB5kYJXZOLPNllCEgVoSnjr0MgA3
+                f0addwgGiLFC9hdGlIdA+8P+hBx5JIpi9Ii0gcNoyOwY/8RiTt6/MiMjcAu9bkZ+3BY6sHYbsLidfrsa
+                GrNjNQ8cqm8OUQjlBDczV6rKoLEcqPPAI2mR+6bScgtG49Z8FhAibWXh8B1gCCEMNyOSCypWDj/UHZ/g
+                UAZTR6GvWKW6C/qNeo4wg5ysCh6T7dLQv7HqiiHR5208iyLeh3gio+cDiENeHk+ptSdXs19WOhCTUsz5
+                rBDGQaLZcIVzIIfaOrlxImw9ke5bIu+Qn56dlLc/n5I3z00i7ndb9ZENPaIWtCGk0NIMG3+RSzEpuMVy
+                bjSrmK8F8cPtsI7kEopaE3zrFxBn1L0kltEin0wn8ohLTst7l2eQijCc887FWfmHk+Py5vkJeeOzSd11
+                xZQDJSACXHkQ2yWe2EzL7KtkDNVbgYohNKo96q4D9Xlq+Qlqsc8OwdGTg2ko/hQmzvC/R149EJUfHmuV
+                7x3pgHsWU1Eh3FAvQLnXYC8Smpm8fzk9Je9dWZDt7WHd4XSgyy1f3R2SI4AdQWp6K9BKXPjRwJycoJFB
+                RNsLgEwppDqZhMh/MphBNq+oeHJPqx/jiMtrxzbJy4BQhwB/1GhUqKWjuCNZteEEXBlc15XTKZmBQ21B
+                PET2bfLKD4+3y58caQekCWg+5P1rs/KjE2MI36c0L2yAT1VsOFiKd9nphl9bkgsjSfnj32uWPz/eIy/s
+                71COsb0EcuHEYlbevTSnCxWDvBMnsk96QkQFHeDi7x1pk7/+ard8F4u3BVt0f9s/J3/7/rD8/W/GdUvv
+                WiGzByag7c7YnKXcVcPVlqdTiY4oEaiYMTVuyu5B3O/Vw23yh092gnMiMg9M9q9nZuTHp2YQlaF4csmt
+                Lf3LhMVKGeC7AIhIT2MYscItSEB1A7dEUNNrXk1A5QdfNpdHQDarMISEoxdTwm9pHJaQRu0ByH71cDvS
+                ozEB88k0ElhvnZuWM8MpwCsEGahU7yNJ9cAEXDGnO05rNUSlZINQgf4yJrcL21j3dYWxIRtgDRO6CAB7
+                CXt+uUmGkRXu8WAIS/X1CnY20IeKHkl09NUJYB0GgezrXEwaouFZgvMEwHAWAQO/BnFZ4c+MIX+3FWCe
+                mxj3dAT1OxqYs7eQt8H9aRapQ6QDAO6at15jwg9EQEOcGq2g76KqNermaWoZ8WkcAGNd+bkZaP44wC0h
+                Bq8NYaK/hT6ksWDkRWGCFT5arqqtJ7MvcAYrUDsQifnWoSatXqCXo+kAcNnIXE7eQjL+Hz+elA/6kggY
+                0NuAK4axkGtbYGS+sb9dvo7GzN74Qkbeurgg7yHW6IRPTiNCfWsW32wQX3nUru3aBKyxOtohIyiK3Thg
+                W09VH0FyzgAMp1Ahyv3ExG8LSILTBz7eG5HNKN0g5pvH95cAJVjK7MXAFTJgtOQSfZubvQo6EaOzCmiM
+                3jy/MyyvoHphX1dU98eR6PyfL7n4r4tTCqpvJ7H9C1GWm9CnX0ENzcsoAuAGnX3IV+8AUekfUxdex673
+                CRiUXJnpBhNloZfDOKH15oPK5GzrzpwMm270uReHEumTaHaUkrQkeGVIvRnF3Ay7E3jqilHi8DfnfRG+
+                7S1UJOyGiOQwCeYzggCu21AgySAAD3Inoy+skSGDUsTh2SFXgtpmLlANBqMDT+KxUrW3xSNfRrDh8JY4
+                jBHEl1VY1pbZVKEgZ6EOGIQl+GYo68pEVuZQrNQWdKAMLoRYIETaGgNhCV5AgkVEPBBczTGgVhNIAbls
+                1OzwjSJ8LYHKHX1wLiKA/iLz3GhkjrsT0CBR7VSr4q23dHCVeqF1O7DpeQxRXh66zZ4EtCScrydh0Q8T
+                QBFsucpicHTe1SJbSN6LRBJFOYxdR3Sl8tBr5NJtzTAIrD7Fjbb46MqjEVbsgA7tavJjc7ZHn8thEvzO
+                AwtyRydhjQkemGelgBmZlCfWY/q0DeMmt5txOyAlXriGFF0zDhK9F2UrOxHr5BtFbB3IvsyiL2kOm4EL
+                EnXVgKottbWb9eyC7m5Y0cM9UX154q/6ErpfV516jQibYOksosa0iI8gYMk+xqCXuOj7oLg7Y37rlSZI
+                GEHnpVGZlQHxSBzW23xjfwvE3G9e7oNGLmdIiyTkwjH8tAkvprDf00ji0buhETiLnMoeTJwVEVrBAI+E
+                xBxH5dZtnHPxd7SHQACPEVeMlxLhR26F73gg9mS06BWEzp7pjSFaBGJDvRBgk0PH4Q5yu8pTPQGMwaVZ
+                xdUDqpg042kkJPEaN+/RteGDc2DhEwNJrZziLO2BWDJcieIy5MS3bDzbi3gcFD3zCyFYtsfwIh+uLPmV
+                OmYBujAF7qRx4KtPxmBY3JhQWwRv5+iIqJWkvuT3/JuiyQCB+T3946T85NQkykOyqIZwyXcOxRDyz8pN
+                TG4R3MdiSy4s44hkgq0wZC8faAMhA6bKAXOgGuFCpMANjICz5jqJgAbfWHJsezNCaW71z+c5PriFjOhw
+                4+PpkezqBOSDskD8rP35i2c6tTrUgc6KRaws9APrkKm3CDns4shaXcq15YCpt8JY2RY0lqZ5wXGMxDCJ
+                xMgyq6lIxEIBIoaEz4dIop8cSCi3PtoZku88sQnvi4EjbB2VkLqlC+im/ejEOEJQaU0z0I9+HMVJLPel
+                CvnphQUlOht1M4nAB/aiKHMvjAnfa8NIi4tExvwW0lmA+Xn5CF7SFAxhO4Ksf/X8VqgMAnSoAxD4l9en
+                0RaRk4FKAr68a06EBODaMaTOiS5iZSYxYOYfyNbUNVTeSkArwlKpDMUlRkK4unPgHnIW425pMC2rSzk4
+                TpARlEkA6RFwHR39c3jFEzmHmI0BgggwXhzcz4S8WSijFakechBt4refX53XF/Aw9KW6GLcc7PKreuAr
+                U2jATCDeiKx5JRXCZWCSLYg6c4yTEPlx6M8hvFrg06Ek3leTwzzNPhOiBnIo32XDUr0zw4vg8JzqVu5j
+                vsuLd5hrNSxPa2gbCd1LZVlPezrVaVVx7zIwrcEzc4Xcpm8vgiKmIg8xVQnRTGKS5I6SFZ7SWmlcj4Fz
+                f3CsRfZ1N2ktITswYTHsYgfR3z4Pz2GEIs93aeFrijkI8nRvWCu8hgDOzwwzsWUi2HQmLfcauNMtX0Kp
+                CMKKANxGshaZjdM0pxF7cjy60f3KyoEgJKNGuohEH9Sjq9UHmlSeudGEiYwMfeH6O7WWGA4mYgiuoMdw
+                rgJn7dxwGdUHBhqEdWaEmTni5lA1KsJdSiNzCS2J+zXenERudHEDna4TvA1AIWK4brhqrKHmC31YHszN
+                N4yIb2/zqiHjPVegPy+OmxcH2YkiE7io+u40LLZHZ0M1LRXl2Ok6PmiBpRnpFzsIhu3ggnmfDAlniGot
+                kRqGPKhAAjIHQv1l38D7WFHAemiGtIjJ1IhV3stMDkVAllyESdKy7sfupR5YVqoc4sibMzQwUCuaeDL1
+                2wxlmepgMxJbghQCalLMgkX8RuFVtaCzoQS0k9Q2wWx+rF0OkzSiKLIekOF1GCyCeeVZY3nTBaPRuDO9
+                GnXmzC3xIiAGsRiaP9Dtg9/rV4tLPXx+NK15D76FjiXE1JU24aoLeQ8GqdFZyoWN5MC1+JbTVy6tudGk
+                EqsXTFmbYUoFtrb4WpyjSR9NipvSYfMib5uwRnWYEJV5kaQtn9qfzclrDbTm+/8BrQJklqnhS8MAAAAA
+                SUVORK5CYII=
+            </property>
+        </structure>
+    </list-property>
 </report>

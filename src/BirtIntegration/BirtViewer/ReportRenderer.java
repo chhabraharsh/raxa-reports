@@ -81,7 +81,7 @@ public class ReportRenderer  {
 		}
 		
 		//give the download report Name here.
-		String downloadFileName = reportNameRequestParameter+".pdf";
+		String downloadFileName = reportNameRequestParameter;
 		
 		//Base URL
 		String baseUrl = request.getScheme() + "://"  + request.getServerName() + ":"  + request.getServerPort()+request.getContextPath();
@@ -97,16 +97,27 @@ public class ReportRenderer  {
 		//opend design document
 		runnable = birtEngine.openReportDesign( sc.getRealPath("/Reports")+"/"+reportName );
 		
-		//first process the report using Iruntask which will create the temp.rptdocument 
 		IRunTask iRunTask = birtEngine.createRunTask(runnable);
-	
+		// parametert for viewpatients reports
+	/*if(reportName=="viewpatienttest.rptdesign")
+		{
+	//	 String creator=(String)request.getAttribute("creator");
+	     iRunTask.setParameterValue("creator",1);
+		}
+		*/
 		iRunTask.getAppContext().put( EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request );
-		
+/*if(reportName=="viewpatienttest.rptdesign")
+		{
+	//	 String creator=(String)request.getAttribute("creator");
+	     iRunTask.setParameterValue("creator",1);
+		}
+	*/	
 		//put the parameter values from request to the report parameter
 		iRunTask.setParameterValues(discoverAndSetParameters( runnable, request ));
 		
 		//create temp rpddocument
 		iRunTask.run(sc.getRealPath("/Reports")+"/temp.rptdocument");
+				
 		iRunTask.close();
 		
 		
@@ -146,7 +157,7 @@ public class ReportRenderer  {
 			pdfOptions.setBaseURL(baseUrl);
 			//pdfOptions.setOutputFileName("my.pdf");
 			pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW, IPDFRenderOption.FIT_TO_PAGE_SIZE);
-			response.setHeader(	"Content-Disposition", "attachment; filename="+downloadFileName );
+			response.setHeader(	"Content-Disposition", "attachment; filename="+downloadFileName+".pdf" );
 			pdfOptions.setOutputStream(response.getOutputStream());
 			
 			iRenderTask.setRenderOption(pdfOptions);
@@ -157,7 +168,7 @@ public class ReportRenderer  {
 			
 			  EXCELRenderOption xlsOptions = new EXCELRenderOption(options); 
 			  xlsOptions.setOutputFormat("xls");
-			  response.setHeader(	"Content-Disposition", "attachment; filename="+downloadFileName);
+			  response.setHeader(	"Content-Disposition", "attachment; filename="+downloadFileName+".xls");
 			  xlsOptions.setImageHandler(new HTMLServerImageHandler());
 			  xlsOptions.setOutputStream(response.getOutputStream());
 			  //xlsOptions.setOption(IRenderOption.EMITTER_ID, "org.uguess.birt.report.engine.emitter.xls");
@@ -166,7 +177,7 @@ public class ReportRenderer  {
 			  
 		}else{
 
-			response.setHeader(	"Content-Disposition", "attachment; filename=\"" + downloadFileName + "\"" );
+			response.setHeader(	"Content-Disposition", "attachment; filename=\"" + downloadFileName + ".doc" );
 			options.setOutputStream(response.getOutputStream());
 			options.setOutputFormat(format);
 			iRenderTask.setRenderOption(options);

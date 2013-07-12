@@ -11,7 +11,7 @@
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
 	<div>
-		<h3 align="center" style="color:#84A9CF">Reporting</h3>
+		<h3 align="center" style="color:#84A9CF">Raxa-Reporting</h3>
 		
 		<div style="float: left;width: 25%;">
 			<fieldset style="background-color: white;">
@@ -20,10 +20,8 @@
 			</legend>
 				<ul>
 				<li> <a href="#" onclick="generateReport('First_Report.rptdesign')" >Test Report</a></li>
-				<li> <a href="#" onclick="generateReport('view_patients.rptdesign')" >View Patients</a></li>
-				<li> <a href="#" onclick="generateReportpati('viewpatienttest.rptdesign',1)" >View Patients parameter</a></li>
-				
-				<li> <a href="NewFile.jsp"> Patients Report</a></li>
+				<li> <a href="#" onclick="generateReportViewPatients('view_patients.rptdesign',24)" >View Patients</a></li>
+			     <li> <a href="NewFile.jsp">Patients Report</a></li>
 				</ul>
 			</fieldset>
 		</div>
