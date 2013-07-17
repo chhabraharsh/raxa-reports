@@ -22,6 +22,8 @@
 				<li> <a href="#" onclick="generateReport('First_Report.rptdesign')" >Test Report</a></li>
 				<li> <a href="#" onclick="generateReportViewPatients('view_patients.rptdesign',24)" >View Patients</a></li>
 			     <li> <a href="NewFile.jsp">Patients Report</a></li>
+				<li> <a href="#" onclick="generateReport('daily_log.rptdesign')" >Test Report</a></li>
+				
 				</ul>
 			</fieldset>
 		</div>

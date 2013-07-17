@@ -43,9 +43,8 @@
                 </ex-property>
             </list-property>
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
-            <property name="odaURL">jdbc:mysql://localhost/dataForDSS</property>
+            <property name="odaURL">jdbc:mysql://localhost/datafordss</property>
             <property name="odaUser">root</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">SGVsbG8xMjM=</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -476,6 +475,12 @@ where person_id=?]]></xml-property>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="obs" id="152">
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">person_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">person_id</text-property>
+                    <text-property name="heading">person_id</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">obs_id</property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">obs_id</text-property>
@@ -486,12 +491,6 @@ where person_id=?]]></xml-property>
                     <property name="analysis">measure</property>
                     <text-property name="displayName">concept_id</text-property>
                     <text-property name="heading">concept_id</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">person_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">person_id</text-property>
-                    <text-property name="heading">person_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">name</property>
@@ -516,17 +515,17 @@ where person_id=?]]></xml-property>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">obs_id</property>
+                        <property name="name">person_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">concept_id</property>
+                        <property name="name">obs_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">person_id</property>
+                        <property name="name">concept_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
@@ -540,22 +539,22 @@ where person_id=?]]></xml-property>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
+                    <property name="name">person_id</property>
+                    <property name="nativeName">person_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
                     <property name="name">obs_id</property>
                     <property name="nativeName">obs_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                     <property name="name">concept_id</property>
                     <property name="nativeName">concept_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">person_id</property>
-                    <property name="nativeName">person_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
@@ -567,7 +566,8 @@ where person_id=?]]></xml-property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select obs_id,obs.concept_id,obs.person_id,concept_name.name from obs,concept_name where obs.encounter_id in (select encounter_id from encounter_provider where provider_id =? and MONTH(encounter_provider.date_created) between MONTH(current_timestamp)-4 and MONTH(current_timestamp)) and obs.concept_id=concept_name.concept_id group by obs.person_id]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select obs.person_id,obs_id,obs.concept_id,GROUP_CONCAT(concept_name.name) as name
+from obs,concept_name where obs.encounter_id in (select encounter_id from encounter_provider where provider_id =? and MONTH(encounter_provider.date_created) between MONTH(current_timestamp)-4 and MONTH(current_timestamp)) and obs.concept_id=concept_name.concept_id group by obs.person_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -721,7 +721,7 @@ where person_id=?]]></xml-property>
                     <property name="nativeDataType">-5</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select count(distinct patient_id) from encounter where encounter.encounter_id in (select encounter_id from encounter_provider where provider_id =?) and MONTH(encounter.encounter_datetime) between MONTH(current_timestamp)-3 and MONTH(current_timestamp)
+            <xml-property name="queryText"><![CDATA[select count(distinct patient_id) from encounter where encounter.encounter_id in (select encounter_id from encounter_provider where provider_id =?) and MONTH(encounter.encounter_datetime) between MONTH(current_timestamp)-4 and MONTH(current_timestamp)
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -991,78 +991,49 @@ Patients Records
                 </structure>
             </list-property>
             <column id="197">
-                <property name="width">2.3020833333333335in</property>
+                <property name="width">1.9166666666666667in</property>
             </column>
             <column id="198">
-                <property name="width">1.5833333333333333in</property>
+                <property name="width">1.3541666666666667in</property>
             </column>
             <column id="199">
-                <property name="width">2.4479166666666665in</property>
+                <property name="width">1.0208333333333333in</property>
             </column>
             <column id="200">
-                <property name="width">1.3645833333333333in</property>
+                <property name="width">3.40625in</property>
             </column>
             <header>
                 <row id="182">
                     <property name="backgroundColor">#FF8000</property>
                     <cell id="183">
                         <label id="204">
-                            <property name="marginLeft">30pt</property>
+                            <property name="marginLeft">15pt</property>
                             <property name="textAlign">left</property>
                             <text-property name="text">First Name</text-property>
                         </label>
                     </cell>
                     <cell id="184">
                         <label id="206">
-                            <property name="marginLeft">30pt</property>
+                            <property name="marginLeft">15pt</property>
                             <property name="textAlign">left</property>
                             <text-property name="text">Last Name </text-property>
                         </label>
                     </cell>
                     <cell id="185">
                         <label id="201">
-                            <property name="marginLeft">40pt</property>
+                            <property name="marginLeft">15pt</property>
                             <property name="textAlign">left</property>
                             <text-property name="text">Age</text-property>
                         </label>
                     </cell>
-                    <cell id="186"/>
+                    <cell id="186">
+                        <label id="247">
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <text-property name="text">Purpose</text-property>
+                        </label>
+                    </cell>
                 </row>
             </header>
-            <group id="233">
-                <property name="groupName">NewTableGroup1</property>
-                <expression name="keyExpr" type="javascript">row["obs::name"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["obs::name"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="234">
-                        <cell id="235">
-                            <data id="244">
-                                <property name="backgroundColor">#DBDBDB</property>
-                                <property name="fontFamily">"Times New Roman"</property>
-                                <property name="fontWeight">bold</property>
-                                <property name="textUnderline">none</property>
-                                <property name="marginTop">10pt</property>
-                                <property name="marginLeft">30pt</property>
-                                <property name="resultSetColumn">obs::name</property>
-                            </data>
-                        </cell>
-                        <cell id="236"/>
-                        <cell id="237"/>
-                        <cell id="238"/>
-                    </row>
-                </header>
-                <footer>
-                    <row id="239">
-                        <cell id="240"/>
-                        <cell id="241"/>
-                        <cell id="242"/>
-                        <cell id="243"/>
-                    </row>
-                </footer>
-            </group>
             <detail>
                 <row id="187">
                     <property name="fontSize">14pt</property>
@@ -1074,7 +1045,7 @@ Patients Records
                         <data id="205">
                             <property name="fontFamily">"Times New Roman"</property>
                             <property name="fontSize">12pt</property>
-                            <property name="marginLeft">40pt</property>
+                            <property name="marginLeft">20pt</property>
                             <property name="resultSetColumn">viewpatients::given_name</property>
                         </data>
                     </cell>
@@ -1082,7 +1053,7 @@ Patients Records
                         <data id="207">
                             <property name="fontFamily">"Times New Roman"</property>
                             <property name="fontSize">12pt</property>
-                            <property name="marginLeft">40pt</property>
+                            <property name="marginLeft">20pt</property>
                             <property name="resultSetColumn">viewpatients::family_name</property>
                         </data>
                     </cell>
@@ -1090,11 +1061,15 @@ Patients Records
                         <data id="202">
                             <property name="fontFamily">"Times New Roman"</property>
                             <property name="fontSize">12pt</property>
-                            <property name="marginLeft">40pt</property>
+                            <property name="marginLeft">20pt</property>
                             <property name="resultSetColumn">viewpatients::age</property>
                         </data>
                     </cell>
-                    <cell id="191"/>
+                    <cell id="191">
+                        <data id="248">
+                            <property name="resultSetColumn">obs::name</property>
+                        </data>
+                    </cell>
                 </row>
             </detail>
             <footer>

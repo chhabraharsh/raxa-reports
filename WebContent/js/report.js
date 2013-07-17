@@ -31,6 +31,7 @@ currentReporturl="";
 	    });
         
         currentReportName=reportName;
+        currentReporturl=reporturl;
 	}
 	function generateReportViewPatients(reportName,provider) {
 		////&MyParam=ParamValue&invokesubmit=true
