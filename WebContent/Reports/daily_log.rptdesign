@@ -26,11 +26,24 @@
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
             <property name="odaURL">jdbc:mysql://localhost/dataForDSS</property>
             <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">SGVsbG8xMjM=</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="patient_info" id="40">
             <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">encounter_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">encounter_id</text-property>
+                    <text-property name="heading">encounter_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">encounter_type</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">encounter_type</text-property>
+                    <text-property name="heading">encounter_type</text-property>
+                </structure>
                 <structure>
                     <property name="columnName">patient_id</property>
                     <property name="analysis">measure</property>
@@ -50,16 +63,16 @@
                     <text-property name="heading">family_name</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">name</property>
+                    <property name="columnName">group_concat(encounter_type.name)</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">name</text-property>
-                    <text-property name="heading">name</text-property>
+                    <text-property name="displayName">group_concat(encounter_type.name)</text-property>
+                    <text-property name="heading">group_concat(encounter_type.name)</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">concept_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">concept_id</text-property>
-                    <text-property name="heading">concept_id</text-property>
+                    <property name="columnName">time</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">time</text-property>
+                    <text-property name="heading">time</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">age</property>
@@ -68,10 +81,34 @@
                     <text-property name="heading">age</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">time</property>
+                    <property name="columnName">order_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">order_id</text-property>
+                    <text-property name="heading">order_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">drug_inventory_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">drug_inventory_id</text-property>
+                    <text-property name="heading">drug_inventory_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">name</property>
                     <property name="analysis">dimension</property>
-                    <text-property name="displayName">time</text-property>
-                    <text-property name="heading">time</text-property>
+                    <text-property name="displayName">name</text-property>
+                    <text-property name="heading">name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">dosage_form_mapping</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">dosage_form_mapping</text-property>
+                    <text-property name="heading">dosage_form_mapping</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">description</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">description</text-property>
+                    <text-property name="heading">description</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters"/>
@@ -79,84 +116,114 @@
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">patient_id</property>
+                        <property name="name">encounter_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
+                        <property name="name">encounter_type</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">patient_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
                         <property name="name">given_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">3</property>
+                        <property name="position">5</property>
                         <property name="name">family_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
-                        <property name="name">name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">concept_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
                         <property name="position">6</property>
-                        <property name="name">age</property>
-                        <property name="dataType">integer</property>
+                        <property name="name">group_concat(encounter_type.name)</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
                         <property name="name">time</property>
                         <property name="dataType">time</property>
                     </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">age</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">order_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">drug_inventory_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">dosage_form_mapping</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">description</property>
+                        <property name="dataType">string</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">raxadatabase</property>
             <list-property name="resultSet">
                 <structure>
+                    <property name="position">1</property>
+                    <property name="name">encounter_id</property>
+                    <property name="nativeName">encounter_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
                     <property name="position">2</property>
+                    <property name="name">encounter_type</property>
+                    <property name="nativeName">encounter_type</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">patient_id</property>
                     <property name="nativeName">patient_id</property>
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">given_name</property>
                     <property name="nativeName">given_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">family_name</property>
                     <property name="nativeName">family_name</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
-                    <property name="name">name</property>
-                    <property name="nativeName">name</property>
+                    <property name="position">6</property>
+                    <property name="name">group_concat(encounter_type.name)</property>
+                    <property name="nativeName">group_concat(encounter_type.name)</property>
                     <property name="dataType">string</property>
                     <property name="nativeDataType">12</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">concept_id</property>
-                    <property name="nativeName">concept_id</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">age</property>
-                    <property name="nativeName">age</property>
-                    <property name="dataType">integer</property>
-                    <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">7</property>
@@ -165,14 +232,64 @@
                     <property name="dataType">time</property>
                     <property name="nativeDataType">92</property>
                 </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">age</property>
+                    <property name="nativeName">age</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">order_id</property>
+                    <property name="nativeName">order_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">drug_inventory_id</property>
+                    <property name="nativeName">drug_inventory_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">name</property>
+                    <property name="nativeName">name</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">dosage_form_mapping</property>
+                    <property name="nativeName">dosage_form_mapping</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">description</property>
+                    <property name="nativeName">description</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select encounter.patient_id,person_name.given_name,person_name.family_name,encounter_type.name,obs.concept_id,year(current_date)-year(person.birthdate)as age ,time(encounter.date_created) as time
- from encounter
- inner join person_name on person_name.person_id=encounter.patient_id
- join encounter_type on encounter.encounter_type=encounter_type.encounter_type_id
- join obs on encounter.encounter_id=obs.encounter_id
- join person on person.person_id=person_name.person_id
- where encounter.encounter_id in (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =1 ) order by time]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select  encounter.encounter_id,encounter_type, encounter.patient_id,person_name.given_name,person_name.family_name,group_concat(encounter_type.name) ,time(encounter.date_created) as time,year(current_date)-year(person.birthdate)as age, orders.order_id ,drug_order.drug_inventory_id,drug.name,drug.dosage_form_mapping,concept_description.description
+ from encounter 
+left outer join person_name on person_name.person_id=encounter.patient_id
+left outer join encounter_type on encounter.encounter_type=encounter_type.encounter_type_id
+left outer join person on person.person_id=person_name.person_id
+left outer join obs on encounter.encounter_id=obs.encounter_id and obs.concept_id not in (33334003,33334004,33334002)
+left outer join orders on orders.encounter_id=encounter.encounter_id
+left outer join drug_order on drug_order.order_id=orders.order_id
+left outer join drug on drug.drug_id =drug_order.drug_inventory_id
+left outer join concept_description on concept_description.concept_id=obs.concept_id
+
+where encounter.encounter_id in (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =1 )
+ group by patient_id order by time
+
+]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -293,10 +410,10 @@
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="patient_description" id="41">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">description</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">description</text-property>
-                    <text-property name="heading">description</text-property>
+                    <property name="columnName">encounter_id</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">encounter_id</text-property>
+                    <text-property name="heading">encounter_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">concept_id</property>
@@ -304,18 +421,30 @@
                     <text-property name="displayName">concept_id</text-property>
                     <text-property name="heading">concept_id</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">description</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">description</text-property>
+                    <text-property name="heading">description</text-property>
+                </structure>
             </list-property>
+            <list-property name="parameters"/>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">description</property>
-                        <property name="dataType">string</property>
+                        <property name="name">encounter_id</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
                         <property name="name">concept_id</property>
                         <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">description</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -323,10 +452,10 @@
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">description</property>
-                    <property name="nativeName">description</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
+                    <property name="name">encounter_id</property>
+                    <property name="nativeName">encounter_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">4</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
@@ -335,8 +464,19 @@
                     <property name="dataType">integer</property>
                     <property name="nativeDataType">4</property>
                 </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">description</property>
+                    <property name="nativeName">description</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select concept_description.description, concept_id from concept_description where concept_id in (select obs.concept_id from obs where encounter_id in (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =1 ) )]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select encounter.encounter_id,obs.concept_id,concept_description.description
+from encounter
+left outer join obs on obs.encounter_id= encounter.encounter_id  and obs.concept_id not in (33334002,33334003,33334004)
+left outer join concept_description on concept_description.concept_id=obs.concept_id
+where encounter.encounter_id in  (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =1 ) group by encounter.encounter_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -394,93 +534,136 @@
         <joint-data-set name="patient_full_info" id="42">
             <list-property name="columnHints">
                 <structure>
+                    <property name="columnName">patient_info::dosage_form_mapping</property>
+                    <property name="alias">dosage_form_mapping</property>
+                    <text-property name="displayName">patient_info::dosage_form_mapping</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::name_12</property>
+                    <property name="alias">name_12</property>
+                    <text-property name="displayName">patient_info::name_12</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_description::encounter_id</property>
+                    <property name="alias">patient_description::encounter_id</property>
+                    <text-property name="displayName">patient_description::encounter_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::given_name</property>
+                    <property name="alias">given_name</property>
+                    <text-property name="displayName">patient_info::given_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::order_id</property>
+                    <property name="alias">order_id</property>
+                    <text-property name="displayName">patient_info::order_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::encounter_type</property>
+                    <property name="alias">encounter_type</property>
+                    <text-property name="displayName">patient_info::encounter_type</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::time</property>
+                    <property name="alias">time</property>
+                    <text-property name="displayName">patient_info::time</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">patient_description::concept_id</property>
-                    <property name="alias">patient_description::concept_id</property>
-                    <property name="analysis">measure</property>
+                    <property name="alias">concept_id</property>
                     <text-property name="displayName">patient_description::concept_id</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::encounter_id</property>
+                    <property name="alias">patient_info::encounter_id</property>
+                    <text-property name="displayName">patient_info::encounter_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_description::description</property>
                     <property name="alias">description</property>
-                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_description::description</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::name</property>
                     <property name="alias">name</property>
-                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_info::name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::age</property>
+                    <property name="alias">age</property>
+                    <text-property name="displayName">patient_info::age</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::family_name</property>
                     <property name="alias">family_name</property>
-                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_info::family_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">patient_info::GROUP_CONCAT(obs.concept_id )</property>
+                    <property name="alias">GROUP_CONCAT(obs.concept_id )</property>
+                    <text-property name="displayName">patient_info::GROUP_CONCAT(obs.concept_id )</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::patient_id</property>
                     <property name="alias">patient_id</property>
-                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_info::patient_id</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">patient_info::given_name</property>
-                    <property name="alias">given_name</property>
-                    <property name="analysis">dimension</property>
-                    <text-property name="displayName">patient_info::given_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">patient_info::concept_id</property>
-                    <property name="alias">patient_info::concept_id</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">patient_info::concept_id</text-property>
+                    <property name="columnName">patient_info::drug_inventory_id</property>
+                    <property name="alias">drug_inventory_id</property>
+                    <text-property name="displayName">patient_info::drug_inventory_id</text-property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">patient_info::patient_id</property>
+                        <property name="name">patient_info::encounter_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
+                        <property name="name">patient_info::encounter_type</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">patient_info::patient_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
                         <property name="name">patient_info::given_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">3</property>
+                        <property name="position">5</property>
                         <property name="name">patient_info::family_name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">4</property>
+                        <property name="position">6</property>
                         <property name="name">patient_info::name</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
-                        <property name="name">patient_info::concept_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">patient_info::age</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
                         <property name="position">7</property>
+                        <property name="name">patient_info::GROUP_CONCAT(obs.concept_id )</property>
+                        <property name="dataType">blob</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
                         <property name="name">patient_info::time</property>
                         <property name="dataType">time</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
-                        <property name="name">patient_description::description</property>
-                        <property name="dataType">string</property>
+                        <property name="position">9</property>
+                        <property name="name">patient_info::age</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
-                        <property name="name">patient_description::concept_id</property>
+                        <property name="position">10</property>
+                        <property name="name">patient_info::order_id</property>
                         <property name="dataType">integer</property>
                     </structure>
                 </list-property>
@@ -495,8 +678,8 @@
                     <property name="joinOperator">eq</property>
                     <property name="leftDataSet">patient_info</property>
                     <property name="rightDataSet">patient_description</property>
-                    <expression name="leftExpression">dataSetRow["concept_id"]</expression>
-                    <expression name="rightExpression">dataSetRow["concept_id"]</expression>
+                    <expression name="leftExpression">dataSetRow["encounter_id"]</expression>
+                    <expression name="rightExpression">dataSetRow["encounter_id"]</expression>
                 </structure>
             </list-property>
         </joint-data-set>
@@ -624,23 +807,24 @@
             <property name="contentType">html</property>
             <text-property name="content"><![CDATA[<CENTER>
 <H1>
-Today's record
+Daily Report
 </H1>
 </CENTER>]]></text-property>
         </text>
         <grid id="72">
             <property name="width">7.947916666666667in</property>
             <column id="73">
-                <property name="width">2.34375in</property>
+                <property name="width">2.9270833333333335in</property>
             </column>
             <column id="74">
-                <property name="width">5.604166666666667in</property>
+                <property name="width">5.020833333333333in</property>
             </column>
             <row id="75">
                 <cell id="76">
                     <text id="82">
                         <property name="fontFamily">"Times New Roman"</property>
-                        <property name="fontSize">12pt</property>
+                        <property name="fontSize">14pt</property>
+                        <property name="fontWeight">normal</property>
                         <property name="marginLeft">20pt</property>
                         <property name="contentType">html</property>
                         <text-property name="content"><![CDATA[<H3>
@@ -650,20 +834,6 @@ Total Patients visited :
                 </cell>
                 <cell id="77">
                     <label id="196"/>
-                    <data id="193">
-                        <property name="fontFamily">"Times New Roman"</property>
-                        <property name="fontSize">16pt</property>
-                        <property name="dataSet">total_visits</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">count(concept_description.description)</property>
-                                <text-property name="displayName">count(concept_description.description)</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["count(concept_description.description)"]</expression>
-                                <property name="dataType">decimal</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">count(concept_description.description)</property>
-                    </data>
                 </cell>
             </row>
             <row id="78">
@@ -671,313 +841,258 @@ Total Patients visited :
                 <cell id="80"/>
             </row>
         </grid>
-        <table id="43">
-            <property name="width">7.947916666666667in</property>
-            <property name="dataSet">patient_full_info</property>
+        <table id="260">
+            <property name="borderBottomStyle">none</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderRightStyle">none</property>
+            <property name="borderTopStyle">none</property>
+            <property name="dataSet">patient_info</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">patient_info::given_name</property>
-                    <text-property name="displayName">patient_info::given_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::given_name"]</expression>
+                    <property name="name">given_name</property>
+                    <text-property name="displayName">given_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["given_name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">patient_info::family_name</property>
-                    <text-property name="displayName">patient_info::family_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::family_name"]</expression>
+                    <property name="name">family_name</property>
+                    <text-property name="displayName">family_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["family_name"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="name">patient_description::description</property>
-                    <text-property name="displayName">patient_description::description</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_description::description"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">patient_info::age</property>
-                    <text-property name="displayName">patient_info::age</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::age"]</expression>
-                    <property name="dataType">decimal</property>
-                </structure>
-            </list-property>
-            <column id="60">
-                <property name="width">1.21875in</property>
-            </column>
-            <column id="61">
-                <property name="width">1.1041666666666667in</property>
-            </column>
-            <column id="62">
-                <property name="width">5.625in</property>
-            </column>
-            <header>
-                <row id="44">
-                    <cell id="45"/>
-                    <cell id="46"/>
-                    <cell id="47"/>
-                </row>
-            </header>
-            <detail>
-                <row id="48">
-                    <property name="fontFamily">"Times New Roman"</property>
-                    <cell id="49">
-                        <data id="64">
-                            <property name="fontSize">14pt</property>
-                            <property name="marginLeft">25pt</property>
-                            <property name="resultSetColumn">patient_info::given_name</property>
-                        </data>
-                    </cell>
-                    <cell id="50">
-                        <data id="66">
-                            <property name="fontSize">14pt</property>
-                            <property name="marginLeft">20pt</property>
-                            <property name="resultSetColumn">patient_info::family_name</property>
-                        </data>
-                    </cell>
-                    <cell id="51">
-                        <grid id="83">
-                            <property name="width">5.5625in</property>
-                            <column id="84">
-                                <property name="width">0.8125in</property>
-                            </column>
-                            <column id="85">
-                                <property name="width">4.75in</property>
-                            </column>
-                            <row id="86">
-                                <cell id="87">
-                                    <text id="90">
-                                        <property name="fontSize">14pt</property>
-                                        <property name="color">#800040</property>
-                                        <property name="contentType">auto</property>
-                                        <text-property name="content"><![CDATA[Age:]]></text-property>
-                                    </text>
-                                </cell>
-                                <cell id="88">
-                                    <data id="89">
-                                        <property name="fontSize">14pt</property>
-                                        <property name="resultSetColumn">patient_info::age</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </grid>
-                    </cell>
-                </row>
-                <row id="52">
-                    <cell id="53">
-                        <property name="colSpan">3</property>
-                        <property name="rowSpan">1</property>
-                        <data id="68">
-                            <property name="fontFamily">"Times New Roman"</property>
-                            <property name="fontSize">12pt</property>
-                            <property name="borderBottomStyle">solid</property>
-                            <property name="borderBottomWidth">thin</property>
-                            <property name="marginLeft">25pt</property>
-                            <property name="marginBottom">5pt</property>
-                            <property name="resultSetColumn">patient_description::description</property>
-                        </data>
-                    </cell>
-                </row>
-            </detail>
-            <footer>
-                <row id="56">
-                    <cell id="57"/>
-                    <cell id="58"/>
-                    <cell id="59"/>
-                </row>
-            </footer>
-        </table>
-        <table id="117">
-            <property name="width">7.947916666666667in</property>
-            <property name="dataSet">patient_full_info</property>
-            <list-property name="boundDataColumns">
-                <structure>
-                    <property name="name">patient_info::given_name</property>
-                    <text-property name="displayName">patient_info::given_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::given_name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">patient_info::family_name</property>
-                    <text-property name="displayName">patient_info::family_name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::family_name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">patient_info::age</property>
-                    <text-property name="displayName">patient_info::age</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::age"]</expression>
+                    <property name="name">age</property>
+                    <text-property name="displayName">age</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["age"]</expression>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="name">patient_description::description</property>
-                    <text-property name="displayName">patient_description::description</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_description::description"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">patient_info::time</property>
-                    <text-property name="displayName">patient_info::time</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::time"]</expression>
+                    <property name="name">time</property>
+                    <text-property name="displayName">time</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["time"]</expression>
                     <property name="dataType">time</property>
                 </structure>
                 <structure>
-                    <property name="name">patient_info::name</property>
-                    <text-property name="displayName">patient_info::name</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["patient_info::name"]</expression>
+                    <property name="name">group_concat(encounter_type.name)</property>
+                    <text-property name="displayName">group_concat(encounter_type.name)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["group_concat(encounter_type.name)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">description</property>
+                    <text-property name="displayName">description</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["description"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">name</property>
+                    <text-property name="displayName">name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">dosage_form_mapping</property>
+                    <text-property name="displayName">dosage_form_mapping</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["dosage_form_mapping"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="138">
-                <property name="width">1.1145833333333333in</property>
-            </column>
-            <column id="139">
-                <property name="width">1.03125in</property>
-            </column>
-            <column id="140">
-                <property name="width">1.2708333333333333in</property>
-            </column>
-            <column id="141">
-                <property name="width">4.53125in</property>
-            </column>
+            <column id="273"/>
             <header>
-                <row id="118">
-                    <cell id="119">
-                        <label id="142">
-                            <text-property name="text"></text-property>
-                        </label>
-                    </cell>
-                    <cell id="120">
-                        <label id="144">
-                            <text-property name="text"></text-property>
-                        </label>
-                    </cell>
-                    <cell id="121"/>
-                    <cell id="122"/>
+                <row id="261">
+                    <cell id="262"/>
                 </row>
             </header>
             <detail>
-                <row id="123">
-                    <cell id="124">
-                        <data id="143">
-                            <property name="fontFamily">"Times New Roman"</property>
-                            <property name="fontSize">14pt</property>
-                            <property name="marginLeft">25pt</property>
-                            <property name="resultSetColumn">patient_info::given_name</property>
-                        </data>
-                    </cell>
-                    <cell id="125">
-                        <data id="145">
-                            <property name="fontFamily">"Times New Roman"</property>
-                            <property name="fontSize">14pt</property>
-                            <property name="marginLeft">20pt</property>
-                            <property name="resultSetColumn">patient_info::family_name</property>
-                        </data>
-                    </cell>
-                    <cell id="126">
-                        <grid id="146">
-                            <property name="width">3.5833333333333335in</property>
-                            <column id="147">
-                                <property name="width">0.6770833333333334in</property>
+                <row id="263">
+                    <property name="backgroundColor">#FF8000</property>
+                    <cell id="264">
+                        <grid id="274">
+                            <property name="width">7.875in</property>
+                            <column id="275">
+                                <property name="width">0.9479166666666666in</property>
                             </column>
-                            <column id="148">
-                                <property name="width">2.90625in</property>
+                            <column id="276">
+                                <property name="width">2.5625in</property>
                             </column>
-                            <row id="149">
-                                <cell id="150">
-                                    <text id="160">
+                            <column id="277">
+                                <property name="width">0.4583333333333333in</property>
+                            </column>
+                            <column id="278">
+                                <property name="width">1.7395833333333333in</property>
+                            </column>
+                            <column id="279">
+                                <property name="width">0.5208333333333334in</property>
+                            </column>
+                            <column id="280">
+                                <property name="width">1.6458333333333333in</property>
+                            </column>
+                            <row id="281">
+                                <cell id="282">
+                                    <data id="288">
+                                        <property name="fontFamily">"Times New Roman"</property>
+                                        <property name="fontSize">14pt</property>
+                                        <property name="marginLeft">25pt</property>
+                                        <property name="resultSetColumn">given_name</property>
+                                    </data>
+                                </cell>
+                                <cell id="283">
+                                    <data id="289">
+                                        <property name="fontFamily">"Times New Roman"</property>
+                                        <property name="fontSize">14pt</property>
+                                        <property name="resultSetColumn">family_name</property>
+                                    </data>
+                                </cell>
+                                <cell id="284">
+                                    <text id="290">
+                                        <property name="fontFamily">"Times New Roman"</property>
                                         <property name="fontSize">14pt</property>
                                         <property name="color">#800040</property>
                                         <property name="contentType">auto</property>
                                         <text-property name="content"><![CDATA[Age:]]></text-property>
                                     </text>
                                 </cell>
-                                <cell id="151">
-                                    <data id="152">
+                                <cell id="285">
+                                    <data id="291">
                                         <property name="fontFamily">"Times New Roman"</property>
                                         <property name="fontSize">14pt</property>
-                                        <property name="resultSetColumn">patient_info::age</property>
+                                        <property name="resultSetColumn">age</property>
                                     </data>
                                 </cell>
-                            </row>
-                        </grid>
-                    </cell>
-                    <cell id="127">
-                        <grid id="179">
-                            <property name="width">4.177083333333333in</property>
-                            <column id="180">
-                                <property name="width">0.6041666666666666in</property>
-                            </column>
-                            <column id="181">
-                                <property name="width">1.1770833333333333in</property>
-                            </column>
-                            <column id="182">
-                                <property name="width">1in</property>
-                            </column>
-                            <column id="183">
-                                <property name="width">1.3958333333333333in</property>
-                            </column>
-                            <row id="184">
-                                <cell id="185">
-                                    <text id="189">
+                                <cell id="286">
+                                    <text id="292">
+                                        <property name="fontFamily">"Times New Roman"</property>
                                         <property name="fontSize">14pt</property>
                                         <property name="color">#800040</property>
                                         <property name="contentType">auto</property>
                                         <text-property name="content"><![CDATA[Time:]]></text-property>
                                     </text>
                                 </cell>
-                                <cell id="186">
-                                    <data id="192">
+                                <cell id="287">
+                                    <data id="293">
                                         <property name="fontFamily">"Times New Roman"</property>
                                         <property name="fontSize">14pt</property>
-                                        <property name="resultSetColumn">patient_info::time</property>
-                                    </data>
-                                </cell>
-                                <cell id="187">
-                                    <text id="190">
-                                        <property name="fontSize">14pt</property>
-                                        <property name="color">#800040</property>
-                                        <property name="contentType">auto</property>
-                                        <text-property name="content"><![CDATA[Enc Type:]]></text-property>
-                                    </text>
-                                </cell>
-                                <cell id="188">
-                                    <data id="191">
-                                        <property name="fontFamily">"Times New Roman"</property>
-                                        <property name="fontSize">14pt</property>
-                                        <property name="resultSetColumn">patient_info::name</property>
+                                        <property name="resultSetColumn">time</property>
                                     </data>
                                 </cell>
                             </row>
                         </grid>
                     </cell>
                 </row>
-                <row id="128">
-                    <cell id="129">
-                        <property name="colSpan">4</property>
-                        <property name="rowSpan">1</property>
-                        <text id="70">
-                            <property name="fontFamily">"Times New Roman"</property>
-                            <property name="fontSize">12pt</property>
+                <row id="265">
+                    <cell id="266">
+                        <grid id="295">
+                            <property name="width">6.34375in</property>
+                            <column id="296">
+                                <property name="width">1.0833333333333333in</property>
+                            </column>
+                            <column id="297">
+                                <property name="width">5.260416666666667in</property>
+                            </column>
+                            <row id="298">
+                                <cell id="299">
+                                    <text id="301">
+                                        <property name="fontSize">14pt</property>
+                                        <property name="color">#800040</property>
+                                        <property name="marginLeft">25pt</property>
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Action:]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="300">
+                                    <data id="303">
+                                        <property name="fontFamily">"Times New Roman"</property>
+                                        <property name="fontSize">14pt</property>
+                                        <property name="marginLeft">0pt</property>
+                                        <property name="resultSetColumn">group_concat(encounter_type.name)</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+                <row id="267">
+                    <property name="height">0.46875in</property>
+                    <cell id="268">
+                        <text id="160">
+                            <property name="fontSize">14pt</property>
                             <property name="color">#800040</property>
                             <property name="marginLeft">25pt</property>
-                            <property name="contentType">html</property>
+                            <property name="contentType">auto</property>
                             <text-property name="content"><![CDATA[Description:]]></text-property>
                         </text>
-                        <data id="172">
+                        <data id="305">
                             <property name="fontFamily">"Times New Roman"</property>
-                            <property name="fontSize">12pt</property>
+                            <property name="fontSize">14pt</property>
                             <property name="marginLeft">25pt</property>
-                            <property name="marginBottom">10pt</property>
-                            <property name="resultSetColumn">patient_description::description</property>
+                            <property name="resultSetColumn">description</property>
                         </data>
+                    </cell>
+                </row>
+                <row id="269">
+                    <property name="borderBottomStyle">none</property>
+                    <property name="borderLeftStyle">none</property>
+                    <property name="borderRightStyle">none</property>
+                    <property name="borderTopStyle">none</property>
+                    <cell id="270">
+                        <grid id="307">
+                            <property name="borderBottomStyle">none</property>
+                            <property name="borderLeftStyle">none</property>
+                            <property name="borderRightStyle">none</property>
+                            <property name="borderTopStyle">none</property>
+                            <property name="width">7.875in</property>
+                            <column id="308">
+                                <property name="width">0.8854166666666666in</property>
+                            </column>
+                            <column id="309">
+                                <property name="width">2.84375in</property>
+                            </column>
+                            <column id="310">
+                                <property name="width">1.03125in</property>
+                            </column>
+                            <column id="311">
+                                <property name="width">3.1145833333333335in</property>
+                            </column>
+                            <row id="312">
+                                <cell id="313">
+                                    <text id="317">
+                                        <property name="fontSize">14pt</property>
+                                        <property name="color">#800040</property>
+                                        <property name="marginLeft">25pt</property>
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Drug:]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="314">
+                                    <data id="319">
+                                        <property name="fontFamily">"Times New Roman"</property>
+                                        <property name="fontSize">14pt</property>
+                                        <property name="resultSetColumn">name</property>
+                                    </data>
+                                </cell>
+                                <cell id="315">
+                                    <text id="318">
+                                        <property name="fontSize">14pt</property>
+                                        <property name="color">#800040</property>
+                                        <property name="contentType">auto</property>
+                                        <text-property name="content"><![CDATA[Drug type:]]></text-property>
+                                    </text>
+                                </cell>
+                                <cell id="316">
+                                    <data id="320">
+                                        <property name="fontFamily">"Times New Roman"</property>
+                                        <property name="fontSize">14pt</property>
+                                        <property name="resultSetColumn">dosage_form_mapping</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </grid>
                     </cell>
                 </row>
             </detail>
             <footer>
-                <row id="133">
-                    <cell id="134"/>
-                    <cell id="135"/>
-                    <cell id="136"/>
-                    <cell id="137"/>
+                <row id="271">
+                    <cell id="272"/>
                 </row>
             </footer>
         </table>

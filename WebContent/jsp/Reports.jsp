@@ -10,6 +10,12 @@
 
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
+<img alt="" src="images/header.JPG" width="101%">
+<div style="position: absolute; left:7%; top:10%">
+<img alt="" src="images/logo.PNG" height=80 />
+<br>
+</div>
+<br>
 	<div>
 		<h3 align="center" style="color:#84A9CF">Raxa-Reporting</h3>
 		
@@ -21,7 +27,7 @@
 				<ul>
 				<li> <a href="#" onclick="generateReport('First_Report.rptdesign')" >Test Report</a></li>
 				<li> <a href="#" onclick="generateReportViewPatients('view_patients.rptdesign',24)" >View Patients</a></li>
-			     <li> <a href="NewFile.jsp">Patients Report</a></li>
+			     <li> <a href="jsp/NewFile.jsp">Patients Report</a></li>
 				<li> <a href="#" onclick="generateReport('daily_log.rptdesign')" >Test Report</a></li>
 				
 				</ul>
