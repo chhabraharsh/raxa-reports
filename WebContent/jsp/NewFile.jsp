@@ -10,7 +10,7 @@
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
 	<div>
-		<h3 align="center" style="color:#84A9CF">Raxa-Reporting</h3>
+		<h3 align="center" style="color:#84A9CF">Monthly Report</h3>
 		
 		<div style="float: left;width: 25%;">
 			<fieldset style="background-color: white;">
@@ -25,11 +25,7 @@
 		
 <form action="">
 Provider ID: <input type="number"  id="provider_id" name="providerid" ></input>
- <select name="proid">
-<option value=1>1</option>
-<option value=24>24</option>            
-<option value=27>27</option>            
-</select>
+
 <input id="clickme" type="button" value="submit" onclick= "generateReportViewPatients('view_patients.rptdesign',parseInt(document.getElementsByName('providerid'),10));" />
 </form>
 		
@@ -42,7 +38,7 @@ Provider ID: <input type="number"  id="provider_id" name="providerid" ></input>
 			</legend>
 		<br>
 			<div id="downloadOptions" align="right">
-				Dwonload Report as:  
+				Download Report as:  
 				<a href="#" onclick="downloadReport('pdf')" >pdf</a>,
 				<a href="#" onclick="downloadReport('xls')" >xls</a>,
 				<a href="#" onclick="downloadReport('doc')" >doc</a>,

@@ -45,7 +45,6 @@
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
             <property name="odaURL">jdbc:mysql://localhost/dataForDSS</property>
             <property name="odaUser">root</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">SGVsbG8xMjM=</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>

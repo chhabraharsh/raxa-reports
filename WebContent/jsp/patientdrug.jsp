@@ -10,16 +10,10 @@
 
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
-<img alt="" src="images/header.JPG" width="101%">
-<div style="position: absolute; left:7%; top:10%">
-<img alt="" src="images/logo.PNG" height=80 />
-<br>
-</div>
-<br>
-	<div>
-		<h3 align="center" style="color:#84A9CF">Raxa-Reporting</h3>
+<li> <a href="Reports.jsp">Home</a></li>
+	<!-- 	<h3 align="center" style="color:#84A9CF">Raxa</h3>
 		
-		<div style="float: left;width: 25%;">
+	 <div style="float: left;width: 25%;">
 			<fieldset style="background-color: white;">
 			<legend >
 				<b style="color:#84A9CF">Select Reports</b>
@@ -34,14 +28,25 @@
 				</ul>
 			</fieldset>
 		</div>
-		
+		-->
+		<div>
+<form action="#" style="position: absolute; left: 40%">
+<font size="4" color="light blue"  face="times roman">Enter patient's First name</font> 
+<br>
+
+<input type="text" name="first" height="40" style="width: 170;height: 40;"/><br><font size="4" color="light blue"  face="times roman">last name</font><br><input type="text" name="last" height="40" style="width: 170;height: 40;"/><br/>
+
+<input type="submit" value="Submit" style="font-size: medium;color: white; background-color:blue; width: 170; height: 40; " onclick="generatereport(drugofpatient.rptdesign);"/>
+</form>
+</div>
+<br><br><br><br><br><br>
 		<fieldset style="background-color: white;">
 			<legend>
 				<b style="color:#84A9CF">Report Details:</b>
 			</legend>
 		
 			<div id="downloadOptions" align="right">
-				Download Report as:  
+				Dwonload Report as:  
 				<a href="#" onclick="downloadReport('pdf')" >pdf</a>,
 				<a href="#" onclick="downloadReport('xls')" >xls</a>,
 				<a href="#" onclick="downloadReport('doc')" >doc</a>,

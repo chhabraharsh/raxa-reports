@@ -2,8 +2,8 @@ package bean;
 
 public interface Provider {
 String DRIVER="com.mysql.jdbc.Driver";
-String CONNECTION_URL="jdbc:mysql://localhost:3306/dataForDSS";
+String CONNECTION_URL="jdbc:mysql://localhost:3306/datafordss";
 String USERNAME="root";
-String PASSWORD="Hello123";
+String PASSWORD="";
 
 }
