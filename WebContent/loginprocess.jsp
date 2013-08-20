@@ -5,15 +5,19 @@
 <jsp:setProperty property="*" name="obj"/>
 
 <%
-boolean status=LoginDao.validate(obj);
+int status=LoginDao.validate(obj);
 //String user=LoginDao.validate(obj);
-if(status){
+if(status!=-1){
 	
 //out.println("hello,"+request.getAttribute("email"));
-session.setAttribute("session","TRUE");
+session.setAttribute("provider_id",status);
+session.setAttribute("username",obj.getEmail());
 %>
+<body>
+
 <jsp:include page="jsp/Reports.jsp"></jsp:include>
 <div style="position: absolute; right:200; top:100">
+</body>
 <% 
 }
 else

@@ -33,6 +33,8 @@ currentReporturl="";
         currentReportName=reportName;
         currentReporturl=reporturl;
 	}
+	
+//2.	
 	function generateReportViewPatients(reportName,provider) {
 		////&MyParam=ParamValue&invokesubmit=true
 		//	here relative url is given if relative url is not working try giving full url
@@ -58,6 +60,97 @@ currentReporturl="";
         currentReportName=reportName;
         currentReporturl=reporturl;
 	}
+	//3.
+	
+	function generateReportViewDrugs(reportName,provider) {
+		////&MyParam=ParamValue&invokesubmit=true
+		//	here relative url is given if relative url is not working try giving full url
+		//provider=24;
+	//	var test=user.permission;
+		//test=provider;
+		console.log(provider);
+	//	document.write(provider);
+		
+		        
+		var reporturl ="/BirtIntegration/loadReport?ReportName="+reportName+"&provider_id="+provider+"&ReportFormat=html";
+		
+		$("#reportData").html("Loading...<br><img src='/BirtIntegration/images/loading.gif' align='middle' >");
+		
+        $('#reportData').load(reporturl ,function(response, status, xhr) {
+        	
+          if (status == "error") {
+		    var msg = "Sorry but there was an error getting details ! ";
+			$("#reportData").html(msg + xhr.status + " " + xhr.statusText);
+		  }
+	    });
+        
+        currentReportName=reportName;
+        currentReporturl=reporturl;
+	}
+	function generateReportonobs(reportName,provider) {
+		////&MyParam=ParamValue&invokesubmit=true
+		//	here relative url is given if relative url is not working try giving full url
+		//provider=24;
+	//	var test=user.permission;
+		//test=provider;
+	//	console.log(provider);
+	//	document.write(provider);
+		
+		        
+		var reporturl ="/BirtIntegration/loadReport?ReportName="+reportName+"&provider_id="+provider+"&ReportFormat=html";
+		
+		$("#reportData").html("Loading...<br><img src='/BirtIntegration/images/loading.gif' align='middle' >");
+		
+        $('#reportData').load(reporturl ,function(response, status, xhr) {
+        	
+          if (status == "error") {
+		    var msg = "Sorry but there was an error getting details ! ";
+			$("#reportData").html(msg + xhr.status + " " + xhr.statusText);
+		  }
+	    });
+        
+        currentReportName=reportName;
+        currentReporturl=reporturl;
+	}
+	
+	
+	
+	
+	function generateReportpatientdetail(reportName,identifier) {
+		////&MyParam=ParamValue&invokesubmit=true
+		//	here relative url is given if relative url is not working try giving full url
+		//provider=24;
+	//	var test=user.permission;
+		//test=provider;
+		console.log(identifier);
+		console.log(identifier);
+		console.log(identifier);
+	//	document.write(provider);
+		
+		        
+		var reporturl ="/BirtIntegration/loadReport?ReportName="+reportName+"&identifier="+identifier+"&ReportFormat=html";
+		console.log(identifier);
+		$("#reportData").html("Loading...<br><img src='/BirtIntegration/images/loading.gif' align='middle' >");
+		
+        $('#reportData').load(reporturl ,function(response, status, xhr) {
+        	
+          if (status == "error") {
+		    var msg = "Sorry but there was an error getting details ! ";
+			$("#reportData").html(msg + xhr.status + " " + xhr.statusText);
+		  }
+	    });
+        
+        currentReportName=reportName;
+        currentReporturl=reporturl;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Download report function
 	 * 

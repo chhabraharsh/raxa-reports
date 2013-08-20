@@ -10,28 +10,22 @@
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
 	<div>
-		<h3 align="center" style="color:#84A9CF">Drug Report</h3>
+		<h3 align="center" style="color:#84A9CF">Patients History</h3>
 		
 		<div style="float: left;width: 25%;">
-			<fieldset style="background-color: white;">
 			
-				<ul>
-				<li> <a href="#" onclick="generateReportViewDrugs('drugorders.rptdesign',1)" >Generate report for super user</a></li>
-			<!--  	<li> <a href="#" onclick="generateReportViewPatients('view_patients.rptdesign',50)">Patients Report</a></li>-->
-				</ul>
-			</fieldset>
 		</div>
 		
 		
-<form action="">
-Provider ID: <input type="number"  id="provider_id" name="providerid" ></input>
+<form action="" style="position:absolute; left:38%;">
+Patient Identifier: <input type="text"  id="patient_identifier" name="patientidentifier" ></input>
 
-<input id="clickme" type="button" value="submit" onclick= "generateReportViewDrugs('drugorders.rptdesign',parseInt(document.getElementsByName('providerid')[0].value,10));" />
+<input id="clickme" type="button" value="submit" onclick= "generateReportpatientdetail('patientreport.rptdesign',generateReportpatientdetail('patientreport.rptdesign',document.getElementsByName('patientidentifier')[0].value));" />
 </form>
 		
 		
 		
-		
+		<br>
 		<fieldset style="background-color: white;">
 			<legend>
 				<b style="color:#84A9CF">Report Details:</b>

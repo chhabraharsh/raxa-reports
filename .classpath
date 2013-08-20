@@ -17,5 +17,10 @@
 	<classpathentry kind="lib" path="C:/Users/Harsh/Downloads/javax.servlet.jsp-api-2.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Harsh/Downloads/org.eclipse.birt.runtime-3.7.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Harsh/Downloads/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8.jar"/>
+	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8-javadoc.jar"/>
+	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8-sources.jar"/>
+	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8-tests.jar"/>
+	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8-test-sources.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

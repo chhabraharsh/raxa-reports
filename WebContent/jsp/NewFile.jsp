@@ -26,7 +26,7 @@
 <form action="">
 Provider ID: <input type="number"  id="provider_id" name="providerid" ></input>
 
-<input id="clickme" type="button" value="submit" onclick= "generateReportViewPatients('view_patients.rptdesign',parseInt(document.getElementsByName('providerid'),10));" />
+<input id="clickme" type="button" value="submit" onclick= "generateReportViewPatients('view_patients.rptdesign',parseInt(document.getElementsByName('providerid')[0].value,10));" />
 </form>
 		
 		
