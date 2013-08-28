@@ -41,6 +41,7 @@
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
             <property name="odaURL">jdbc:mysql://localhost/dataForDSS</property>
             <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">cm9vdA==</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -628,7 +629,7 @@ group by encounter.encounter_id order by encounter.date_created]]></xml-property
             <xml-property name="queryText"><![CDATA[select person_name.given_name,person_name.family_name,person.gender,person.birthdate,GROUP_CONCAT(person_attribute.value)
 from person_name
 left outer join person on person.person_id=person_name.person_id 
-inner join person_attribute on person_attribute.person_id=person_name.person_id and (person_attribute.person_attribute_type_id= 103 or person_attribute.person_attribute_type_id= 102)
+left outer join person_attribute on person_attribute.person_id=person_name.person_id and (person_attribute.person_attribute_type_id= 103 or person_attribute.person_attribute_type_id= 102)
 where person_name.person_id in (select patient_identifier.patient_id from patient_identifier where patient_identifier.identifier=?)
 group by person_name.person_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>

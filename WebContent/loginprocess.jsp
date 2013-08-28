@@ -5,13 +5,17 @@
 <jsp:setProperty property="*" name="obj"/>
 
 <%
-int status=LoginDao.validate(obj);
+
+
+ int status=LoginDao.validate(obj);
+
 //String user=LoginDao.validate(obj);
-if(status!=-1){
+if(status!=-4){
 	
 //out.println("hello,"+request.getAttribute("email"));
 session.setAttribute("provider_id",status);
 session.setAttribute("username",obj.getEmail());
+
 %>
 <body>
 
@@ -28,4 +32,5 @@ out.print("Sorry, Username not exists.");
 <jsp:include page="index.jsp"></jsp:include></div>
 <%
 }
+
 %>

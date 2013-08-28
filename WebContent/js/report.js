@@ -123,6 +123,7 @@ currentReporturl="";
 	//	var test=user.permission;
 		//test=provider;
 		console.log(identifier);
+		//identifier=toString(identifier);
 		console.log(identifier);
 		console.log(identifier);
 	//	document.write(provider);
@@ -144,7 +145,35 @@ currentReporturl="";
         currentReporturl=reporturl;
 	}
 	
-	
+// to ganerate bills
+	function generateReportpatientbills(reportName,identifier) {
+		////&MyParam=ParamValue&invokesubmit=true
+		//	here relative url is given if relative url is not working try giving full url
+		//provider=24;
+	//	var test=user.permission;
+		//test=provider;
+		console.log(identifier);
+		//identifier=toString(identifier);
+		console.log(identifier);
+		console.log(identifier);
+	//	document.write(provider);
+		
+		        
+		var reporturl ="/BirtIntegration/loadReport?ReportName="+reportName+"&identifier="+identifier+"&ReportFormat=html";
+		console.log(identifier);
+		$("#reportData").html("Loading...<br><img src='/BirtIntegration/images/loading.gif' align='middle' >");
+		
+        $('#reportData').load(reporturl ,function(response, status, xhr) {
+        	
+          if (status == "error") {
+		    var msg = "Sorry but there was an error getting details ! ";
+			$("#reportData").html(msg + xhr.status + " " + xhr.statusText);
+		  }
+	    });
+        
+        currentReportName=reportName;
+        currentReporturl=reporturl;
+	}
 	
 	
 	

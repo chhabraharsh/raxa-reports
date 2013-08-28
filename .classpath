@@ -22,5 +22,7 @@
 	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8-sources.jar"/>
 	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8-tests.jar"/>
 	<classpathentry kind="lib" path="D:/raxa/tools/commons-codec-1.8/commons-codec-1.8-test-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Harsh/Downloads/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Harsh/Downloads/guava-14.0.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
