@@ -54,27 +54,27 @@ public class LoginDao {
     
       
       if(out.equals(pass))
-      {   provider_id=70;
+      {  // provider_id=70;
     	  System.out.println("passwordmacthed\n");
     	  
-    	/*   PreparedStatement provider=con.prepareStatement("select provider.provider_id from provider where provider.person_id in (select person_id from users where username=?)");
+    	   PreparedStatement provider=con.prepareStatement("select provider.provider_id from provider where provider.person_id in (select person_id from users where username=?)");
 			provider.setString(1,bean.getEmail());
 			
 			ResultSet id=provider.executeQuery();
 			
-		/*	if(!id.next())
+			/*if(!id.next())
 			{
 				System.out.println("no user exists");
 			 //no such user exists as provider
 			}
 			else*/
-		/*	id.next();
+			id.next();
 			{
 				provider_id=id.getInt("provider_id");
 				
 				System.out.println(provider_id+"users exists with id this");
 				
-			}*/
+			}
       }
       else
       {
@@ -97,7 +97,7 @@ public class LoginDao {
 		}catch(Exception e)
 		  {}
 		
-		
+		System.out.println(provider_id);
 		return provider_id;
 	}
 }

@@ -21,7 +21,7 @@
 			while(rs.next()) 
  			{   
 				//System.out.println(rs.getString("username"));
- 			    li.add(rs.getString("username"));
+ 			    li.add(rs.getString("name"));
  			}  
 			
 			String[] str = new String[li.size()];			

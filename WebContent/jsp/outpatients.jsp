@@ -4,9 +4,26 @@
 
 <HTML>
 <HEAD>
-<TITLE>Reports</TITLE>
+<TITLE>Raxa Reports</TITLE>
 <script type="text/javascript" src="/BirtIntegration/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/BirtIntegration/js/report.js"> </script>
+<link rel="stylesheet" type="text/css" href="/BirtIntegration/css/style.css" />
+<script type="text/javascript" src="/BirtIntegration/js/jquery-1.4.2.min.js"></script>
+<script src="/BirtIntegration/js/jquery.autocomplete.js"></script>
+<script>
+jQuery(function(){
+$("#country").autocomplete("list.jsp");
+});
+</script>
+<script type="text/javascript">
+function gotopage(selval){
+	
+var value = selval.options[selval.selectedIndex].value;
+window.location.href=value;
+}
+</script>
+
+
 <script language ="javascript">
 function myfunction(){
 var theSelection = document.getElementById("sel1")[0].value;
@@ -35,9 +52,9 @@ alert("I was called from function 2")
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
 <div><h5  style="text-align: right;"><b >Hello, <%= session.getAttribute("username") %></b></h5><a href="index.jsp" >Logout</a> 
-<img alt="" src="images/logo.PNG" height=80 />
+
 </div>
-<img alt="" src="images/header.JPG" width="101%">
+
 <div style="position: absolute; left:7%; top:10%">
 
 <br>
@@ -49,6 +66,11 @@ alert("I was called from function 2")
 		<div style="float: left;width: 25%;">
 			<fieldset style="background-color: white;">
 			<form name="form2">
+</form>
+<form>
+Enter Concept Name:
+<input type="text" id="country" name="country"/>
+<input id="clickme" type="button" value="submit" onclick= "generateReportpatientdetailwithobs('patientreportwithobs.rptdesign',1,document.getElementsByName('country')[0].value);" />
 </form>
 
 <form name ="form1">
@@ -68,7 +90,7 @@ alert("I was called from function 2")
 			</legend>
 				<ul>
 				<li> <a href="#" onclick="generateReport('First_Report.rptdesign')" >Test Report</a></li>
-				<li> <a href="jsp/outpatients.jsp" onclick="generateReportViewPatients('view_patients.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >My Outpatients</a></li>
+				<li> <a href="#" onclick="generateReportViewPatients('view_patients.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >My Outpatients</a></li>
 			<!--      <li> <a href="jsp/NewFile.jsp">View providers Patients Report</a></li>-->
 				<li> <a href="#" onclick="generateReport('daily_log.rptdesign')" >Daily log</a></li>
 			<li>	<a href="#" onclick="generateReportViewDrugs('drugorders.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >My Drug Orders</a></li>
