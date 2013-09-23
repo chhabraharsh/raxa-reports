@@ -7,10 +7,14 @@
         </structure>
         <structure>
             <property name="name">__isdisplay__provider_id_80_1</property>
-            <property name="value">1</property>
+            <property name="value">7</property>
         </structure>
         <structure>
-            <property name="name">obs_79_2</property>
+            <property name="name">__isdisplay__startdate_115_2</property>
+            <property name="value">2013-07-28</property>
+        </structure>
+        <structure>
+            <property name="name">obs_79_3</property>
             <property name="value">Anemia due to Blood Loss</property>
         </structure>
         <structure>
@@ -18,8 +22,16 @@
             <property name="value">string</property>
         </structure>
         <structure>
-            <property name="name">provider_id_80_3</property>
-            <property name="value">1</property>
+            <property name="name">startdate_115_4</property>
+            <property name="value">2013-07-28</property>
+        </structure>
+        <structure>
+            <property name="name">startdate_115_type_</property>
+            <property name="value">string</property>
+        </structure>
+        <structure>
+            <property name="name">provider_id_80_5</property>
+            <property name="value">7</property>
         </structure>
         <structure>
             <property name="name">provider_id_80_type_</property>

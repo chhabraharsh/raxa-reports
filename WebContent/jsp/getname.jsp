@@ -13,15 +13,18 @@
         Connection con =DriverManager.getConnection("jdbc:mysql://localhost:3306/dataForDSS","root","");
 		 
 		
-		Statement st=con.createStatement();
-		ResultSet rs = st.executeQuery("select concept_name.name from concept_name where locale='en'");
+	//	Statement st=con.createStatement();
+		PreparedStatement ps=con.prepareStatement("select given_name from person_name where person_name.person_id in (select  encounter.patient_id from encounter where encounter.encounter_id in (select encounter_provider.encounter_id from encounter_provider where encounter_provider.provider_id=?)) group by person_name.person_id");
+		ps.setInt(1,(Integer)session.getAttribute( "provider_id" ));
+		
+		ResultSet rs = ps.executeQuery();
 		
 	    	List li = new ArrayList();
 	 
 			while(rs.next()) 
  			{   
-				//System.out.println(rs.getString("username"));
- 			    li.add(rs.getString("name"));
+				//System.out.println(rs.getString("generic_name"));
+ 			    li.add(rs.getString("given_name"));
  			}  
 			
 			String[] str = new String[li.size()];			
@@ -43,11 +46,11 @@
 				System.out.print(query+"  I am query  " );
 				int cnt=1;
 				for(int j=0;j<str.length;j++)
-				{ //  System.out.println(str[j]+"  I am str" );
-					if(str[j].startsWith(query))
-					{
+				{   System.out.println(str[j].toLowerCase()+"  I am str" );
+					if((str[j].toLowerCase()).startsWith(query))
+					{  System.out.print(str[j]+"here\n");
 						out.print(str[j]+"\n");
-						if(cnt>=10)
+						if(cnt>=5)
 							break;
 						cnt++;
 					}
@@ -56,7 +59,7 @@
 		
 			
  		rs.close(); 
- 		st.close(); 
+ 		ps.close(); 
 		con.close();
 
 		    } 

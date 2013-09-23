@@ -7,15 +7,75 @@
 <script type="text/javascript" src="/BirtIntegration/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/BirtIntegration/js/report.js"> </script>
 
+<script language="text/javascript">
+function downloadformat(selval)
+{
+	var formatselected = selval.options[selval.selectedIndex].value;
+	if(formatselected=="0")
+		{
+		downloadReport('pdf');
+		}
+	else if(formatselected=="1")
+		{
+		downloadReport('xls');
+		}
+	else
+		{
+		downloadReport('doc');
+		}
+	
+}
+</script>
+
+
+<style  type="text/css">
+.image { 
+   position: relative; 
+   width: 100%; /* for IE 6 */
+}
+
+h3 { 
+   position: absolute; 
+   top: 30px; 
+   right: 0; 
+   width: 100%; 
+   color: white;
+}
+h4 { 
+   position: absolute; 
+   top: 0.01%; 
+   left: 0; 
+   width: 100%; 
+   color: white;
+   font-size: 15px;
+}
+h2 { 
+   position: absolute; 
+   top: 25px; 
+   left: 160px; 
+   width: 100%; 
+   color: white;
+   font-size: 30px;
+}
+</style>
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
+<div class="image">
+
+      <img src="images/ui/header.png" alt="" width="101%"/>
+      
+      
+      <h2  > Reporting For Patients</h2>
+</div>
+
+
 	<div>
-		<h3 align="center" style="color:#84A9CF">Patients History</h3>
+		<h3 align="center" style="color:#84A9CF"></h3>
 		
 		<div style="float: left;width: 25%;">
 			
 		</div>
-<h4>* Use patient Identifier Number NEW98342</h4>		
+
 		
 <form action="#">		
 <font size="4" color="light blue"  face="times roman">Your Registration No</font> 
@@ -42,18 +102,20 @@
 				<b style="color:#84A9CF">Report Details:</b>
 			</legend>
 		<br>
-			<div id="downloadOptions" align="right">
-				Download Report as:  
-				<a href="#" onclick="downloadReport('pdf')" >pdf</a>,
-				<a href="#" onclick="downloadReport('xls')" >xls</a>,
-				<a href="#" onclick="downloadReport('doc')" >doc</a>,
-					
-			</div>
+						<div id="downloadOptions" align="right" style="width: 50;" >
+				Download Report as: <select id ="format" onchange ="downloadformat(this)"  >
+<option>Select Format</option>
+<option value ="0">PDF</option>
+<option value ="1">XLS</option>
+<option value ="2">DOC </option>
+
+</select> 
 			
 			<div id="reportData" style="height: auto; background-color: white;float: left;min-width: 70%;text-align: center;" align="center">
 				<br>
-				Reports will be loaded here when user selects report from left navigation.
+				
 			</div>
+			
 		</fieldset>
 	</div>
 </BODY>

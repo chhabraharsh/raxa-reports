@@ -4,7 +4,7 @@ import org.apache.commons.codec.digest.*;
 
 import java.security.MessageDigest;
 
-import com.google.common.hash.Hashing;
+//import com.google.common.hash.Hashing;
 
 public class LoginDao {
 
@@ -81,10 +81,10 @@ public class LoginDao {
     	  provider_id=-4;
       }
       
-      // System.out.println(out.length());
-               // System.out.println("CRYPTO password: " + out);
-			//System.out.println(bean.getPass()+"password entered by you\n"+tohash);
-			// System.out.println(DigestUtils.shaHex(tohash)+"hashed password");
+       System.out.println(out.length());
+               System.out.println("CRYPTO password: " + out);
+			System.out.println(bean.getPass()+"password entered by you\n"+tohash);
+		 System.out.println(DigestUtils.shaHex(tohash)+"hashed password");
 			
 			
 			

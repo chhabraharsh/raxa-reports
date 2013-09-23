@@ -5,6 +5,20 @@
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="provider_id" id="321">
+            <property name="valueType">static</property>
+            <property name="isRequired">true</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="raxadatabase" id="7">
             <list-property name="privateDriverProperties">
@@ -26,7 +40,6 @@
             <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
             <property name="odaURL">jdbc:mysql://localhost/dataForDSS</property>
             <property name="odaUser">root</property>
-            <encrypted-property name="odaPassword" encryptionID="base64">cm9vdA==</encrypted-property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -111,7 +124,28 @@
                     <text-property name="heading">description</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">date</property>
+                    <property name="paramName">date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -286,13 +320,45 @@ left outer join drug_order on drug_order.order_id=orders.order_id
 left outer join drug on drug.drug_id =drug_order.drug_inventory_id
 left outer join concept_description on concept_description.concept_id=obs.concept_id
 
-where encounter.encounter_id in (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =1 )
+where encounter.encounter_id in (select encounter_id from encounter_provider where date(encounter_provider.date_created) = ? and provider_id = ?)
  group by patient_id order by time
 
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -428,7 +494,18 @@ where encounter.encounter_id in (select encounter_id from encounter_provider whe
                     <text-property name="heading">description</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -476,10 +553,27 @@ where encounter.encounter_id in (select encounter_id from encounter_provider whe
 from encounter
 left outer join obs on obs.encounter_id= encounter.encounter_id  and obs.concept_id not in (33334002,33334003,33334004)
 left outer join concept_description on concept_description.concept_id=obs.concept_id
-where encounter.encounter_id in  (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =1 ) group by encounter.encounter_id]]></xml-property>
+where encounter.encounter_id in  (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =? ) group by encounter.encounter_id]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
@@ -536,81 +630,85 @@ where encounter.encounter_id in  (select encounter_id from encounter_provider wh
                 <structure>
                     <property name="columnName">patient_info::dosage_form_mapping</property>
                     <property name="alias">dosage_form_mapping</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_info::dosage_form_mapping</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">patient_info::name_12</property>
-                    <property name="alias">name_12</property>
-                    <text-property name="displayName">patient_info::name_12</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_description::encounter_id</property>
                     <property name="alias">patient_description::encounter_id</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_description::encounter_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::given_name</property>
                     <property name="alias">given_name</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_info::given_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::order_id</property>
                     <property name="alias">order_id</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_info::order_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::encounter_type</property>
                     <property name="alias">encounter_type</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_info::encounter_type</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::time</property>
                     <property name="alias">time</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_info::time</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_description::concept_id</property>
                     <property name="alias">concept_id</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_description::concept_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::encounter_id</property>
                     <property name="alias">patient_info::encounter_id</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_info::encounter_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_description::description</property>
                     <property name="alias">description</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_description::description</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::name</property>
                     <property name="alias">name</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_info::name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::age</property>
                     <property name="alias">age</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_info::age</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::family_name</property>
                     <property name="alias">family_name</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">patient_info::family_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">patient_info::GROUP_CONCAT(obs.concept_id )</property>
-                    <property name="alias">GROUP_CONCAT(obs.concept_id )</property>
-                    <text-property name="displayName">patient_info::GROUP_CONCAT(obs.concept_id )</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::patient_id</property>
                     <property name="alias">patient_id</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_info::patient_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">patient_info::drug_inventory_id</property>
                     <property name="alias">drug_inventory_id</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">patient_info::drug_inventory_id</text-property>
                 </structure>
             </list-property>
@@ -643,28 +741,58 @@ where encounter.encounter_id in  (select encounter_id from encounter_provider wh
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">patient_info::name</property>
+                        <property name="name">patient_info::group_concat(encounter_type.name)</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">patient_info::GROUP_CONCAT(obs.concept_id )</property>
-                        <property name="dataType">blob</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
                         <property name="name">patient_info::time</property>
                         <property name="dataType">time</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">patient_info::age</property>
                         <property name="dataType">integer</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">patient_info::order_id</property>
                         <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">patient_info::drug_inventory_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">patient_info::name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">patient_info::dosage_form_mapping</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">patient_info::description</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">patient_description::encounter_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">patient_description::concept_id</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">patient_description::description</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -692,7 +820,28 @@ where encounter.encounter_id in  (select encounter_id from encounter_provider wh
                     <text-property name="heading">count(concept_description.description)</text-property>
                 </structure>
             </list-property>
-            <list-property name="parameters"/>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">provider_id</property>
+                    <property name="paramName">provider_id</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">date</property>
+                    <property name="paramName">date</property>
+                    <property name="nativeName"></property>
+                    <property name="dataType">date</property>
+                    <property name="nativeDataType">-1</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
@@ -712,10 +861,42 @@ where encounter.encounter_id in  (select encounter_id from encounter_provider wh
                     <property name="nativeDataType">-5</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select count(concept_description.description) from concept_description where concept_id in (select obs.concept_id from obs where encounter_id in (select encounter_id from encounter_provider where encounter_provider.date_created >= current_date and provider_id =1 ) )]]></xml-property>
+            <xml-property name="queryText"><![CDATA[select count(concept_description.description) from concept_description where concept_id in (select obs.concept_id from obs where encounter_id in (select encounter_id from encounter_provider where date(encounter_provider.date_created) = ? and provider_id =? ) )]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>2</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>-1</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>

@@ -72,7 +72,7 @@
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">param_1</property>
+                    <property name="name">provider_id</property>
                     <property name="paramName">provider_id</property>
                     <property name="nativeName"></property>
                     <property name="dataType">integer</property>
@@ -140,7 +140,7 @@
             <xml-property name="queryText"><![CDATA[select count(drug.generic_name) ,drug.generic_name,drug.dosage_form_mapping ,sum(drug.price) 
 from orders 
 left outer join drug_order on drug_order.order_id=orders.order_id
-left outer join drug on drug_order.drug_inventory_id=drug.drug_id
+left outer join drug on drug_order.drug_inventory_id=drug.drug_id 
 where encounter_id in (select encounter_id from encounter_provider where provider_id=?) 
 group by drug.generic_name,drug.dosage_form_mapping
 having drug.generic_name is not NULL]]></xml-property>
@@ -415,25 +415,29 @@ Previous Month's Drug Orders
             </column>
             <header>
                 <row id="75">
+                    <property name="height">27px</property>
                     <property name="backgroundColor">#FF8040</property>
                     <cell id="76">
                         <label id="94">
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">14pt</property>
                             <text-property name="text">Drug Name</text-property>
                         </label>
                     </cell>
                     <cell id="77">
                         <label id="96">
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">14pt</property>
                             <text-property name="text">Drug Type</text-property>
                         </label>
                     </cell>
                     <cell id="78">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <label id="98">
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">14pt</property>
                             <text-property name="text">Number of orders</text-property>
-                        </label>
-                    </cell>
-                    <cell id="79">
-                        <label id="101">
-                            <text-property name="text">Price</text-property>
                         </label>
                     </cell>
                 </row>
@@ -451,28 +455,28 @@ Previous Month's Drug Orders
                     <property name="borderRightWidth">thin</property>
                     <cell id="81">
                         <data id="95">
-                            <property name="marginLeft">20pt</property>
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="marginLeft">35pt</property>
                             <property name="resultSetColumn">generic_name</property>
                         </data>
                     </cell>
                     <cell id="82">
                         <data id="97">
-                            <property name="marginLeft">30pt</property>
+                            <property name="fontFamily">"Times New Roman"</property>
+                            <property name="fontSize">12pt</property>
+                            <property name="marginLeft">35pt</property>
                             <property name="resultSetColumn">dosage_form_mapping</property>
                         </data>
                     </cell>
                     <cell id="83">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <data id="99">
                             <property name="marginTop">5pt</property>
                             <property name="marginLeft">70pt</property>
+                            <property name="paddingLeft">50pt</property>
                             <property name="resultSetColumn">count(drug.generic_name)</property>
-                        </data>
-                    </cell>
-                    <cell id="84">
-                        <data id="102">
-                            <property name="marginTop">5pt</property>
-                            <property name="marginLeft">50pt</property>
-                            <property name="resultSetColumn">sum(drug.price)</property>
                         </data>
                     </cell>
                 </row>

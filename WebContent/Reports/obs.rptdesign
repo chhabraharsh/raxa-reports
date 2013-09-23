@@ -313,7 +313,7 @@ Observations Made]]></text-property>
             </column>
             <header>
                 <row id="109">
-                    <property name="backgroundColor">#0070DF</property>
+                    <property name="backgroundColor">#FF8040</property>
                     <property name="fontSize">14pt</property>
                     <cell id="110">
                         <label id="120">

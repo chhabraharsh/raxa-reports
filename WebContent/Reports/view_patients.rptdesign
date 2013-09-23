@@ -913,7 +913,7 @@ India]]></text-property>
             <text-property name="content"><![CDATA[<centre><br><H3 align="center" >
 
 
-Patients Records
+MY OUTPATIENTS
 </H3>
 </centre>]]></text-property>
         </text>
@@ -1031,9 +1031,9 @@ Patients Records
         <text id="74">
             <property name="fontFamily">"Times New Roman"</property>
             <property name="fontSize">14pt</property>
-            <property name="marginLeft">35%</property>
+            <property name="marginLeft">5%</property>
             <property name="contentType">html</property>
-            <text-property name="content"><![CDATA[<br>Outpatients Details]]></text-property>
+            <text-property name="content"><![CDATA[<br>My Outpatients]]></text-property>
         </text>
         <label id="111"/>
         <label id="118"/>
@@ -1113,7 +1113,7 @@ Patients Records
             </column>
             <header>
                 <row id="285">
-                    <property name="backgroundColor">#0070DF</property>
+                    <property name="backgroundColor">#FF8040</property>
                     <cell id="286">
                         <label id="308">
                             <property name="fontFamily">"Times New Roman"</property>

@@ -20,25 +20,8 @@ function gotopage(selval){
 var value = selval.options[selval.selectedIndex].value;
 window.location.href=value;
 }
-
-function downloadformat(selval)
-{
-	var formatselected = selval.options[selval.selectedIndex].value;
-	if(formatselected=="0")
-		{
-		downloadReport('pdf');
-		}
-	else if(formatselected=="1")
-		{
-		downloadReport('xls');
-		}
-	else
-		{
-		downloadReport('doc');
-		}
-	
-}
 </script>
+
 
 <script language ="javascript">
 function myfunction(){
@@ -63,12 +46,28 @@ alert("I was called from function 1")
 function2(){
 alert("I was called from function 2")
 }
+function downloadformat(selval)
+{
+	var formatselected = selval.options[selval.selectedIndex].value;
+	if(formatselected=="0")
+		{
+		downloadReport('pdf');
+		}
+	else if(formatselected=="1")
+		{
+		downloadReport('xls');
+		}
+	else
+		{
+		downloadReport('doc');
+		}
+	
+}
 
 </script>
 </HEAD>
 <BODY style="background-color: #F0F0F0;">
 <jsp:include page="header.jsp"></jsp:include>
-
 
 <div style="position: absolute; left:7%; top:10%">
 
@@ -76,50 +75,49 @@ alert("I was called from function 2")
 </div>
 <br>
 	<div>
-	
+		<h3 align="center" style="color:#84A9CF"></h3>
 		
 		<div style="float: left;width: 25%;">
+			<fieldset style="background-color: white;">
+			<form name="form2">
+</form>
 
 
-<fieldset style="background-color: white;">
+
+
 <form>
-Enter Concept Name:
-<input type="text" id="country" name="country"/>
-<br>
-Enter Start Date:
-<input type="date" name="startdate" />
-Enter End Date:
-<input type="date" name="enddate" />
-<input id="clickme" type="button" value="submit" onclick= "generateReportpatientdetailwithobs('patientreportwithobs.rptdesign',<%= session.getAttribute( "provider_id" ) %>,document.getElementsByName('country')[0].value,document.getElementsByName('startdate')[0].value,document.getElementsByName('enddate')[0].value);" />
+
+Pick A Date:
+<input type="date" name="date1" />
+
+<input id="clickme" type="button" value="submit" onclick= "generateReportlog('daily_log.rptdesign',<%= session.getAttribute( "provider_id" ) %>,document.getElementsByName('date1')[0].value);" />
 </form>
 			<legend >
 				<b style="color:#84A9CF">Select Reports</b>
 			</legend>
 				<ol>
-				
-				<li> <a href="#" onclick="generateReportViewPatients('view_patients.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >Past Three Months</a></li>
+				<li> <a href="#" onclick="generateReport('daily_log.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >Daily log</a></li>
 			    <li> <a href="Reports.jsp" >Main Menu</a></li>
-			
-			
-			
-			<!--      <li> <a href="jsp/NewFile.jsp">View providers Patients Report</a></li>
-				<li> <a href="drugs.jsp" >Daily log</a></li>
-			<li>	<a href="drug.jsp" " >My Drug Orders</a></li>
-			<!--  	<li> <a href="jsp/patientdrug.jsp" >Drug Report</a></li>
+			<!-- 	<li> <a href="#" onclick="generateReportViewPatients('view_patients.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >Past Three Months</a></li>
+			     <li> <a href="jsp/NewFile.jsp">View providers Patients Report</a></li>
 				
-				<a href="Reports.jsp">Home</a>	
+			
+			<li>	<a href="#" onclick="generateReportViewDrugs('drugorders.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >My Drug Orders</a></li>
+		  	<li> <a href="jsp/patientdrug.jsp" >Drug Report</a></li>
+				<li> <a href="jsp/patientsreport.jsp" >Patient's Reports</a></li>
 				<li><a href="#" onclick="generateReportonobs('obs.rptdesign',<%= session.getAttribute( "provider_id" ) %>)" >Oberservations Made</a></li>
 				-->
+				
 				</ol>
-</fieldset>
+			</fieldset>
 		</div>
 		
 		<fieldset style="background-color: white;">
 			<legend>
-				<b style="color:#84A9CF"></b>
+				<b style="color:#84A9CF">Report Details:</b>
 			</legend>
 		
-		<div id="downloadOptions" align="right" style="width: 50;" >
+			<div id="downloadOptions" align="right" style="width: 50;" >
 				Download Report as: <select id ="format" onchange ="downloadformat(this)"  >
 <option>Select Format</option>
 <option value ="0">PDF</option>
@@ -133,7 +131,7 @@ Enter End Date:
 			
 			<div id="reportData" style="height: auto; background-color: white;float: left;min-width: 70%;text-align: center;" align="center">
 				<br>
-				Reports will be loaded here when user selects report from left navigation.
+				
 			</div>
 		</fieldset>
 	</div>
